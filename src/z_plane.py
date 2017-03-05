@@ -87,8 +87,36 @@ def show_complex_frame(frame_dict):
     for l in frame_string:
         print(l[0], l[1], l[2])
 
+def show_complex_matrix(Z0,N_DEC=3):
+    SPC = ' ' * 2
+    for row in range(0,Z0.shape[0]):
+        row_str = ''
+        for col in range(0, Z0.shape[1]):
+            row_str += complex_to_string(Z0[row, col], N_DEC) + SPC
+
+        print(row_str)
+
+class ComplexPlane:
 
 
+    def __init__(self, CP=0.0+0.0*1j, ZM=1.0, theta=0.0, h=5, w=5):
+        self._center_point = CP
+        self._zoom_factor = ZM
+        self._theta = theta
+        self._n_rows = h
+        self._n_cols = w
+
+
+    def get_complex_pixels(self):
+        frame_dict = get_complex_frame(self._center_point, self._zoom_factor, self._theta, self._n_rows, self._n_cols)
+        left_style = np.linspace(frame_dict['upper_left'], frame_dict['bottom_left'], self._n_rows )
+        right_style = np.linspace(frame_dict['upper_right'], frame_dict['bottom_right'], self._n_rows)
+        complex_pixels = np.zeros((self._n_rows, self._n_cols)) + np.zeros((self._n_rows, self._n_cols)) * 1j
+
+        for k in range(0, self._n_rows):
+            complex_pixels[k, :] = np.linspace(left_style[k], right_style[k], self._n_cols)
+
+        return complex_pixels
 
 
 
