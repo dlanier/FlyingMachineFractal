@@ -98,19 +98,57 @@ def show_complex_matrix(Z0,N_DEC=3):
 
 class ComplexPlane:
 
-
     def __init__(self, CP=0.0+0.0*1j, ZM=1.0, theta=0.0, h=5, w=5):
         self._center_point = CP
-        self._zoom_factor = ZM
+        self._zoom_factor = max(ZM, 1e-15)
         self._theta = theta
-        self._n_rows = h
-        self._n_cols = w
+        self._n_rows = max(round(h), 1)
+        self._n_cols = max(round(w), 1)
+
+
+    def get_complex_axes(self):
+        """ horiz_axis, vert_axis = self.get_complex_axes() """
+        frame_dict = get_complex_frame(self._center_point, self._zoom_factor, self._theta, self._n_rows, self._n_cols)
+        vert_axis = np.linspace(frame_dict['top_center'], frame_dict['bottom_center'], self._n_cols) + 0.0j
+        horiz_axis = np.linspace(frame_dict['left_center'], frame_dict['right_center'], self._n_cols) + 0.0j
+
+        return horiz_axis, vert_axis
+
+
+    def get_rails(self):
+        """ top_rail, bottom_rail = self.get_styles() """
+        frame_dict = get_complex_frame(self._center_point, self._zoom_factor, self._theta, self._n_rows, self._n_cols)
+        top_rail = np.linspace(frame_dict['upper_left'], frame_dict['upper_right'], self._n_cols) + 0.0j
+        bottom_rail = np.linspace(frame_dict['bottom_left'], frame_dict['bottom_right'], self._n_cols) + 0.0j
+
+        return top_rail, bottom_rail
+
+
+    def get_styles(self):
+        """ left_style, right_style = self.get_styles() """
+        frame_dict = get_complex_frame(self._center_point, self._zoom_factor, self._theta, self._n_rows, self._n_cols)
+        left_style = np.linspace(frame_dict['upper_left'], frame_dict['bottom_left'], self._n_rows) + 0.0j
+        right_style = np.linspace(frame_dict['upper_right'], frame_dict['bottom_right'], self._n_rows) + 0.0j
+
+        return left_style, right_style
+
+
+    def get_complex_row(self, row_number):
+        """ row_vectors = self.get_complex_row() """
+        left_style, right_style = self.get_styles()
+
+        return np.linspace(left_style[row_number], right_style[row_number], self._n_cols) + 0.0j
+
+
+    def get_complex_col(self, col_number):
+        """ col_vectors = self.get_complex_col() """
+        top_rail, bottom_rail = self.get_styles()
+
+        return np.linspace(top_rail[row_number], bottom_rail[row_number], self._n_rows) + 0.0j
 
 
     def get_complex_pixels(self):
-        frame_dict = get_complex_frame(self._center_point, self._zoom_factor, self._theta, self._n_rows, self._n_cols)
-        left_style = np.linspace(frame_dict['upper_left'], frame_dict['bottom_left'], self._n_rows )
-        right_style = np.linspace(frame_dict['upper_right'], frame_dict['bottom_right'], self._n_rows)
+        left_style, right_style = self.get_styles()
         complex_pixels = np.zeros((self._n_rows, self._n_cols)) + np.zeros((self._n_rows, self._n_cols)) * 1j
 
         for k in range(0, self._n_rows):
