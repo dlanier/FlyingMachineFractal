@@ -97,7 +97,8 @@ def show_complex_matrix(Z0,N_DEC=3):
         print(row_str)
 
 class ComplexPlane:
-
+    
+    
     def __init__(self, CP=0.0+0.0*1j, ZM=1.0, theta=0.0, h=5, w=5):
         self._center_point = CP
         self._zoom_factor = max(ZM, 1e-15)
@@ -105,7 +106,31 @@ class ComplexPlane:
         self._n_rows = max(round(h), 1)
         self._n_cols = max(round(w), 1)
 
+        
+    def load_dict(self, parameters_dict):
+        if 'center_point' in parameters_dict:
+            self._center_point = parameters_dict['center_point']
+        if 'zoom_factor' in parameters_dict:
+            self._zoom_factor = parameters_dict['zoom_factor']
+        if 'theta' in parameters_dict:
+            self._theta = parameters_dict['theta']
+        if 'n_rows' in parameters_dict:
+            self._n_rows = parameters_dict['n_rows']
+        if 'n_cols' in parameters_dict:
+            self._n_cols = parameters_dict['n_cols']
 
+
+    def get_parameters_dict(self):
+        """ parameters_dict = self.get_parameters_dict() """
+        parameters_dict = {}
+        parameters_dict['center_point'] = self._center_point
+        parameters_dict['zoom_factor'] = self._zoom_factor
+        parameters_dict['theta'] = self._theta
+        parameters_dict['n_rows'] = self._n_rows
+        parameters_dict['n_cols'] = self._n_cols
+        return parameters_dict
+
+    
     def get_complex_axes(self):
         """ horiz_axis, vert_axis = self.get_complex_axes() """
         frame_dict = get_complex_frame(self._center_point, self._zoom_factor, self._theta, self._n_rows, self._n_cols)
@@ -171,36 +196,4 @@ class ComplexPlane:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-""" wolf wolf """
+""" wuf bottom line wuf """
