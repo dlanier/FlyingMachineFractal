@@ -108,6 +108,7 @@ class ComplexPlane:
 
         
     def load_dict(self, parameters_dict):
+        """ self.load_dict(parameters_dict) """
         if 'center_point' in parameters_dict:
             self._center_point = parameters_dict['center_point']
         if 'zoom_factor' in parameters_dict:
@@ -128,6 +129,7 @@ class ComplexPlane:
         parameters_dict['theta'] = self._theta
         parameters_dict['n_rows'] = self._n_rows
         parameters_dict['n_cols'] = self._n_cols
+        
         return parameters_dict
 
     
@@ -173,6 +175,7 @@ class ComplexPlane:
 
 
     def get_complex_pixels(self):
+        """ complex_pixels = self.get_complex_pixels() """
         left_style, right_style = self.get_styles()
         complex_pixels = np.zeros((self._n_rows, self._n_cols)) + np.zeros((self._n_rows, self._n_cols)) * 1j
 
