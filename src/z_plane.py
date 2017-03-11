@@ -56,45 +56,39 @@ def complex_to_string(z, N_DEC=6):
     return z_str
 
 
-def get_complex_frame_string(frame_dict, N_DEC=4):
+def complex_frame_dict_to_string(frame_dict, N_DEC=4):
     """ get a formatted list of strings """
-
-    Z_INDENT = 14
-    CELL_SPC = 3
-
-    frame_string = []
+    STR_L = 14
+    frame_string = ''
     row = 0
     for k in print_order:
         z_str = complex_to_string(frame_dict[k], N_DEC)
-        spc1 = ' ' * (Z_INDENT - len(k))
+        PAD = ' ' * (STR_L - len(z_str))
+        frame_string += k + ':' + PAD + z_str
         row += 1
-        if np.mod(row, 3) == 1:
-            row_string = [k + spc1 + z_str]
-        elif np.mod(row, 3) == 0:
-            spc0 = ' ' * CELL_SPC
-            row_string.append(spc0 + k + spc1 + z_str)
-            frame_string.append(row_string)
+        if np.mod(row,3) == 0:
+            frame_string += '\n'
         else:
-            spc0 = ' ' * CELL_SPC
-            row_string.append(spc0 + k + spc1 + z_str)
-
+            frame_string += '\t'
     return frame_string
 
 
-def show_complex_frame(frame_dict):
-    """ display a frame_dict in 3 x 3 table format """
-    frame_string = get_complex_frame_string(frame_dict)
-    for l in frame_string:
-        print(l[0], l[1], l[2])
-
 def show_complex_matrix(Z0,N_DEC=3):
+    """ display a complex matrix or array """
     SPC = ' ' * 2
-    for row in range(0,Z0.shape[0]):
+    if Z0.shape[0] == Z0.size:
         row_str = ''
-        for col in range(0, Z0.shape[1]):
-            row_str += complex_to_string(Z0[row, col], N_DEC) + SPC
-
+        for col in range(0, Z0.shape[0]):
+            row_str += complex_to_string(Z0[col], N_DEC) + SPC + '\n'
         print(row_str)
+   
+    else:
+        for row in range(0,Z0.shape[0]):
+            row_str = ''
+            for col in range(0, Z0.shape[1]):
+                row_str += complex_to_string(Z0[row, col], N_DEC) + SPC
+
+            print(row_str)
 
 class ComplexPlane:
     
@@ -132,6 +126,9 @@ class ComplexPlane:
         
         return parameters_dict
 
+    def get_escape_bound(self):
+        corner_scale = max(self._n_rows/self._n_cols, self._n_cols/self._n_rows)
+        return corner_scale * 5 / self._zoom_factor
     
     def get_complex_axes(self):
         """ horiz_axis, vert_axis = self.get_complex_axes() """
@@ -171,7 +168,7 @@ class ComplexPlane:
         """ col_vectors = self.get_complex_col() """
         top_rail, bottom_rail = self.get_styles()
 
-        return np.linspace(top_rail[row_number], bottom_rail[row_number], self._n_rows) + 0.0j
+        return np.linspace(top_rail[col_number], bottom_rail[col_number], self._n_rows) + 0.0j
 
 
     def get_complex_pixels(self):
@@ -183,13 +180,6 @@ class ComplexPlane:
             complex_pixels[k, :] = np.linspace(left_style[k], right_style[k], self._n_cols)
 
         return complex_pixels
-
-
-
-
-
-
-
 
 
 
