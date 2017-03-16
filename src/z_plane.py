@@ -127,8 +127,9 @@ class ComplexPlane:
         return parameters_dict
 
     def get_escape_bound(self):
+        """ escape time algorithm best infinity safe iteration distance """
         corner_scale = max(self._n_rows/self._n_cols, self._n_cols/self._n_rows)
-        return corner_scale * 5 / self._zoom_factor
+        return corner_scale * 12 / self._zoom_factor
     
     def get_complex_axes(self):
         """ horiz_axis, vert_axis = self.get_complex_axes() """
