@@ -56,6 +56,33 @@ def complex_to_string(z, N_DEC=6):
     return z_str
 
 
+def get_aligned_dict_string(d, N_DEC=3):
+    """ pretty_string = z_plane.get_aligned_dict_string(d, N_DEC=3) """
+    INDENT = 16
+    out_string = ''
+    for k in sorted(list(d.keys())):
+        
+        v = d[k]
+        if type(v) == str:
+            s = v
+        elif v == 0:
+            s = '0'
+        elif np.iscomplex(v):
+            s = complex_to_string(v, N_DEC)
+        elif np.round(v) == v:
+            s = '%d'%(v)
+        else:
+            f_str = '%s%s%d%s'%('%','0.',N_DEC,'f')
+            s = f_str%(v)
+        
+        if len(out_string) == 0:
+            out_string = ' ' * max(0,(INDENT - len(k))) + k + ': ' + s
+        else:
+            out_string = out_string + '\n' + ' ' * max(0,(INDENT - len(k))) + k + ': ' + s
+            
+    return out_string + '\n'
+
+
 def complex_frame_dict_to_string(frame_dict, N_DEC=4):
     """ get a formatted list of strings """
     STR_L = 14
@@ -100,7 +127,11 @@ class ComplexPlane:
         self._n_rows = max(round(h), 1)
         self._n_cols = max(round(w), 1)
 
-        
+    def display_self(self):
+        pd = self.get_parameters_dict()
+        s = get_aligned_dict_string(pd)
+        print(s)
+    
     def load_dict(self, parameters_dict):
         """ self.load_dict(parameters_dict) """
         if 'center_point' in parameters_dict:
@@ -122,14 +153,15 @@ class ComplexPlane:
         parameters_dict['zoom_factor'] = self._zoom_factor
         parameters_dict['theta'] = self._theta
         parameters_dict['n_rows'] = self._n_rows
-        parameters_dict['n_cols'] = self._n_cols
-        
+        parameters_dict['n_cols'] = self._n_cols    
         return parameters_dict
 
+    
     def get_escape_bound(self):
         """ escape time algorithm best infinity safe iteration distance """
         corner_scale = max(self._n_rows/self._n_cols, self._n_cols/self._n_rows)
         return corner_scale * 12 / self._zoom_factor
+    
     
     def get_complex_axes(self):
         """ horiz_axis, vert_axis = self.get_complex_axes() """
@@ -183,11 +215,5 @@ class ComplexPlane:
         return complex_pixels
 
 
-
-
-
-
-
-
-
-""" wuf bottom line wuf """
+    
+""" bottom line - wuf wuf """
