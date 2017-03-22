@@ -214,6 +214,62 @@ class ComplexPlane:
 
         return complex_pixels
 
-
     
-""" bottom line - wuf wuf """
+""" class ComplexPlane:  bottom line - wuf wuf """
+
+# This is the "we are all adults here" pythonic traditional way for abstract classes
+class exampl_base():
+
+    def haka_haka(self):
+        return NotImplementedError('Fix me! Fix me!')
+
+
+class exampl_implement(exampl_base):
+
+    def haka_haka(self):
+        return 'whadayaexpect4free?'
+
+
+# This is the newer way ...
+from abc import ABCMeta, abstractmethod
+
+class EquationIterator(metaclass=ABCMeta):
+
+    def __init__(self, p=1.0, ETM=32, ETB=32, cpObj=ComplexPlane()):
+        """ parameters, EscapeTimeMax, EscapeTimeBoundry, complexplaneObject  """
+        self._ETM = ETM
+        self._ETB = ETB
+        self._p = p
+        self._cpObj = cpObj
+
+    @abstractmethod
+    def iter_mat(self, dakine='DUCK'):
+        """ test dakine """
+        # print(dakine)
+        # return 'de_nada'
+
+
+
+class DoDaKine(EquationIterator):
+
+
+    def iter_mat(self, dakine='Quack_Quack'):
+        print(self._p, '\t', dakine)
+        return 'hey_hey'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+""" EOF  """
