@@ -7,6 +7,24 @@ print_order = ['upper_left', 'top_center', 'upper_right',
                'left_center', 'center_point', 'right_center',
               'bottom_left', 'bottom_center', 'bottom_right']
 
+def get_frame_from_dict(def_dict):
+    """ complex_frame, def_dict = get_frame_from_dict(def_dict)
+        legacy wrapper function.
+    Args:
+        def_dict: definition dictionary with keys:
+                    'center_point', 'zoom', 'theta', 'n_rows', 'n_cols'
+    Returns:
+        complex_frame:
+        def_dict:
+    """
+    complex_frame = get_complex_frame(
+        def_dict['center_point'],
+        def_dict['zoom'],
+        def_dict['theta'],
+        def_dict['n_rows'],
+        def_dict['n_cols'])
+
+    return complex_frame, def_dict
 
 def get_complex_frame(CP, ZM, theta, h=1, w=1):
     """ get the complex numbers at ends and centers of a frame  """
