@@ -116,7 +116,7 @@ def int_mat_to_heat_image(int_arr, n_colors):
             
     return M
 
-def hsv_to_rgb(hsv_mat):
+def hsv_to_rgb(hsv_mat, rows, cols):
     """ rgb_mat = hsv_to_rgb(hsv_mat)
         using colorsys primatives.
     Args:
@@ -124,8 +124,8 @@ def hsv_to_rgb(hsv_mat):
     Returns:
         rgb_mat: rows x cols x 3 red-green-blue image
     """
-    rows = hsv_mat.shape[1]
-    cols = hsv_mat.shape[2]
+    #rows = hsv_mat.shape[1]
+    #cols = hsv_mat.shape[2]
     rgb_mat = np.zeros((3, rows, cols))
     for r in range(0, rows):
         for c in range(0, cols):
@@ -152,14 +152,37 @@ def mats3_as_hsv_2rgb(H, S, V):
     """
     n_rows = H.shape[0]
     n_cols = H.shape[1]
-    # I = IP.new('RGB', (n_cols, n_rows))
-    I = IP.new('HSV', (n_cols, n_rows))
+    I = IP.new('RGB', (n_cols, n_rows))
+
     for row in range(0, I.height):
         for col in range(0, I.width):
-            P = tuple(np.int_(
-                [H[row, col] * 255, S[row, col] * 255, V[row, col] * 255]))
+            #P = tuple(np.int_([H[row, col] * 255, S[row, col] * 255, V[row, col] * 255]))
+            red, green, blue = colorsys.hsv_to_rgb(H[row, col], S[row, col], V[row, col])
+            red = int(np.round(red*255))
+            green = int(np.round(green*255))
+            blue = int(np.round(blue*255))
+            P = (red, green, blue)
             I.putpixel((col, row), P)
-    return hsv_to_rgb(I)
+            
+    return I
+
+
+def Z_ET_to_show(Z, ET):
+    """ quick showable graphic of escape-time calculation results """
+    V = 1 - graphic_norm(Z)
+    S = 1 - graphic_norm(ET)
+    H = graphic_norm(np.arctan2(np.imag(Z), np.real(Z)))
+    return mats3_as_hsv_2rgb(H, S, V)
+
+
+def Z_ET_to_show_II(Z, ET):
+    """ quick showable graphic of escape-time calculation results """
+    H = graphic_norm(Z)
+    S = graphic_norm(ET)
+    V = 1 - S
+    I = mats3_as_hsv_2rgb(H, S, V)
+    return I
+
 
 def ET_as_grayscale(ET):
     """ I = ET_as_grayscale(ET)
@@ -190,21 +213,6 @@ def mat_to_gray(V):
             I.putpixel((col, row), P)
     return I
 
-def Z_ET_to_show(Z, ET):
-    """ quick showable graphic of escape-time calculation results """
-    H = 1 - graphic_norm(Z)
-    V = 1 - graphic_norm(ET)
-    S = graphic_norm(np.arctan2(np.imag(Z), np.real(Z)))
-    I = mats3_as_hsv_2rgb(H, S, V)
-    return I
-
-def Z_ET_to_show_II(Z, ET):
-    """ quick showable graphic of escape-time calculation results """
-    H = graphic_norm(Z)
-    S = graphic_norm(ET)
-    V = 1 - S
-    I = mats3_as_hsv_2rgb(H, S, V)
-    return I
 
 def get_a_snowscreen(h, w):
     """ color_snow_image = get_a_snowscreen(h, w)

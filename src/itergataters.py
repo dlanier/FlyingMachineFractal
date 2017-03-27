@@ -5,19 +5,27 @@ lanier4@illinois.edu
 mradmstr514226508@gmail.com
 """
 import os
-# import sys
 import time
 import itertools
 import multiprocessing as mp
 
 import numpy as np
 
-# sys.path.append(1, './')
 import z_plane as zp
 
 
 def get_primitives(list_tuple, par_set, delete_temp_dir=True):
-    """ Usage: ET, Z, Z0 = get_primitives(list_tuple, par_set) """
+    """ ET, Z, Z0 = get_primitives(list_tuple, par_set)
+    Args:
+        list_tuple:
+        par_set:            parameters dictionary with keys: all needed for complex frame,
+                            'dir_path', 'it_max', 'max_d'
+        delete_temp_dir:    True or False ? delete the temporary directory after assembling Z
+    Returns:
+        ET:                 Escape Time matrix (may be float - fractional escape times possible)
+        Z:                  Complex matrix after iteration
+        Z0:                 Complex plane matrix before iteration
+    """
     par_set['tmp_dir'] = get_tmp_dir(par_set['dir_path'], 'tmp')
     complex_frame, par_set = zp.get_frame_from_dict(par_set)
     n_cores = mp.cpu_count()
@@ -39,7 +47,16 @@ def get_primitives(list_tuple, par_set, delete_temp_dir=True):
 
 
 def assemble_rows(par_set):
-    """ parallel large assembly step """
+    """ Z0, Z, ET = assemble_rows(par_set)
+        read the temporary files into the output matrices Z0, Z, and ET
+    Args:
+        par_set:            parameters dictionary with keys:
+                            'n_rows', 'n_cols', 'tmp_dir'
+    Returns:
+        ET:                 Escape Time matrix (may be float - fractional escape times possible)
+        Z:                  Complex matrix after iteration
+        Z0:                 Complex plane matrix before iteration
+    """
     n_rows = par_set['n_rows']
     n_cols = par_set['n_cols']
     tmp_dir = par_set['tmp_dir']
@@ -60,42 +77,21 @@ def assemble_rows(par_set):
     return Z0, Z, ET
 
 
-def werker_bee(fcn_hndl, complex_frame, par_set, row_number):
-    """  parallel branch  """
-    left_style = np.linspace(complex_frame['upper_left'], complex_frame['bottom_left'], par_set['n_rows'])
-    right_style = np.linspace(complex_frame['upper_right'], complex_frame['bottom_right'], par_set['n_rows'])
-    z_row = np.array(np.zeros((1, par_set['n_cols'])), dtype=complex)
-    z_row[0, :] = np.linspace(left_style[row_number], right_style[row_number], par_set['n_cols'])
-
-    processes_row(z_row[0], row_number, fcn_hndl, par_set)
-    return
-
-def processes_row(row_array, row_number, fcn_hndl, par_set):
-    """ tricky row processing proceedure for parallel processing large slow graphic """
-    Z_arr = np.zeros((3,row_array.size),complex)
-    p = par_set['para_meter']
-    it_max = par_set['it_max']
-    max_d = par_set['max_d']
-    
-    col = 0
-    for Z0 in row_array:
-        Z_arr[0, col] = Z0
-        if p is 'use_Z0': p = Z0
-        Z_arr[1, col], Z_arr[2, col] = fcn_hndl(Z0, it_max, max_d, p)
-        col += 1
-        
-    Z_arr[1, :] = Z_arr[1, :] + complex(0.0, float(row_number)) # save row number in complex part of ET
-    file_name = os.path.join(par_set['tmp_dir'], ahora_seq_name('row_%d_'%(row_number), '.txt'))
-    with open(file_name, 'wb') as file_handle:
-        Z_arr.dump(file_handle)
-
-
 def write_row(complex_frame, list_tuple, par_set, row_number):
-    """  
+    """ write_row(complex_frame, list_tuple, par_set, row_number)
+        Process one row of complex plane in the context of the list_tuple equation definition
+        and write the row to the temp directory.
+
+    Args:
+        complex_frame:  z_plane complex frame dictionary of points
+        list_tuple:     list of tuples data struct:   [(function_handle, ([par1, par2,... parN]) )]
+        par_set:        parameters dictionary with keys:
+                        'tmp_dir', 'it_max', 'max_d'
+        row_number:     integer number of the row to process
     """
     left_style = np.linspace(complex_frame['upper_left'], complex_frame['bottom_left'], par_set['n_rows'])
     right_style = np.linspace(complex_frame['upper_right'], complex_frame['bottom_right'], par_set['n_rows'])
-    #row_array = np.array(np.zeros((1, par_set['n_cols'])), dtype=complex)
+
     row_array = np.linspace(left_style[row_number], right_style[row_number], par_set['n_cols'])
 
     it_max = par_set['it_max']
@@ -113,7 +109,7 @@ def write_row(complex_frame, list_tuple, par_set, row_number):
 
         
 def tuplerator(list_tuple, Z0, it_max, max_d):
-    """ Usage: ET, Z = tuplerator(list_tuple, Z0, it_max, max_d)
+    """ ET, Z = tuplerator(list_tuple, Z0, it_max, max_d)
         function iterator for two tuple list (with at least one tuple)
         list_tuple = [(function_1, (p1, p2,... , pn)), (function_2, (p1, p2,... , pn))]
         
@@ -153,7 +149,8 @@ def tuplerator(list_tuple, Z0, it_max, max_d):
     
     
 def ahora_seq_name(prefi_str=None, suffi_str=None):
-    """ locally unique integer time stamp name (1/1e12 sec)
+    """ alpha_time_stamped_name = ahora_seq_name(prefi_str, suffi_str)
+        locally unique (1/1e12 sec) alphanumeric-integer time stamp name
     
     Args:
         n_digits:  number of digits accuracy in the decimal seconds part of the name 
@@ -167,11 +164,13 @@ def ahora_seq_name(prefi_str=None, suffi_str=None):
     ahora_nombre = '%d'%(time.time() * time_decimal_shift)
     if prefi_str is None: prefi_str = ''
     if suffi_str is None: suffi_str = ''
+
     return prefi_str + ahora_nombre + suffi_str
 
 
 def int_to_alpha(N):
-    """ convert integer to spreadsheet column lettering
+    """ alpha_N = int_to_alpha(N)
+        convert integer to spreadsheet column lettering
 
     Args:    an integer representation of the letters like 136964
 
@@ -196,8 +195,10 @@ def int_to_alpha(N):
 
     return alpha_N
 
+
 def seq_time_id_string(time_units=1e6):
-    """ current time in time_units as an integer encoded in a base 26 caps string
+    """ alpha_N = seq_time_id_string(time_units)
+        current time in time_units as an integer encoded in a base 26 caps string
 
     Args:
         time_units:  1e6 is micro seconds, 1 <= time_units <= 1e9
@@ -208,15 +209,16 @@ def seq_time_id_string(time_units=1e6):
     return int_to_alpha(int(time.time() * np.maximum(np.minimum(time_units, 1e9), 1)))
 
 
-
 def get_tmp_dir(dir_path, dir_name, timestamp=None):
-    """ create a "dir_name" with time stamp directory
+    """ new_dir_name = get_tmp_dir(dir_path, dir_name, timestamp)
+        create a "dir_name" with time stamp directory
 
     Args:
-        dir_name: an existing directory such as the run directory.
-        timestamp: optional - if not input a microsecond stamp will be added.
+        dir_path:       an existing directory such as the run directory.
+        dir_name:       new directory name to add to dir_path directory.
+        timestamp:      optional - if not input a microsecond stamp will be added.
     Returns:
-        new_dir_name:
+        new_dir_name:   name of directory just created
     """
     if timestamp is None:
         timestamp = seq_time_id_string()
@@ -227,7 +229,8 @@ def get_tmp_dir(dir_path, dir_name, timestamp=None):
 
 
 def remove_tmp_dir(dir_name):
-    """ remove directory and all the files it contains.
+    """ remove_tmp_dir(dir_name)
+        remove the directory and all the files it contains.
 
     Args:
         dir_name: name of a directory with no sub-directories.
@@ -237,9 +240,9 @@ def remove_tmp_dir(dir_name):
         if len(dir_list) > 0:
             for file_name in dir_list:
                 os.remove(os.path.join(dir_name, file_name))
-
         os.rmdir(dir_name)
     except:
         print('function remove_tmp_dir:\n%s\n(directory DNE)' % (dir_name))
+        pass
 
     return
