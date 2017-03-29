@@ -1,6 +1,6 @@
 ## try to link up:
 
-the linkie = [reference html page](https://github.com/dlanier.github.io/FlyingMachineFractal)
+the linkie = [reference html page](https://dlanier.github.io/FlyingMachineFractal/html/z_plane_functions.html)
 
 ## Welcome to GitHub Pages
 
