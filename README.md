@@ -1,3 +1,7 @@
+## try to link up:
+
+the linkie = [reference html page](https://github.com/dlanier/FlyingMachineFractal/html/z_plane_functions.html)
+
 ## Welcome to GitHub Pages
 
 You can use the [editor on GitHub](https://github.com/dlanier/FlyingMachineFractal/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
