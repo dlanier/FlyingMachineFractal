@@ -137,7 +137,7 @@ def tuplerator(list_tuple, Z0, it_max, max_d):
         Z_was = Z
         try:
             for fcn_hndl, P in list_tuple:
-                Z = fcn_hndl(Z, P)
+                Z = fcn_hndl(Z, P, Z0)
             d = np.abs(Z - Z0)
         except:
             return max(1, ET - 1), Z_was
