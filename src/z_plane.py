@@ -183,27 +183,36 @@ class ComplexPlane:
     
     def get_complex_axes(self):
         """ horiz_axis, vert_axis = self.get_complex_axes() """
-        frame_dict = get_complex_frame(self._center_point, self._zoom_factor, self._theta, self._n_rows, self._n_cols)
-        vert_axis = np.linspace(frame_dict['top_center'], frame_dict['bottom_center'], self._n_cols) + 0.0j
-        horiz_axis = np.linspace(frame_dict['left_center'], frame_dict['right_center'], self._n_cols) + 0.0j
+        frame_dict = get_complex_frame(self._center_point,
+                                       self._zoom_factor, self._theta, self._n_rows, self._n_cols)
+        vert_axis = np.linspace(frame_dict['top_center'],
+                                frame_dict['bottom_center'], self._n_cols) + 0.0j
+        horiz_axis = np.linspace(frame_dict['left_center'],
+                                 frame_dict['right_center'], self._n_cols) + 0.0j
 
         return horiz_axis, vert_axis
 
 
     def get_rails(self):
         """ top_rail, bottom_rail = self.get_styles() """
-        frame_dict = get_complex_frame(self._center_point, self._zoom_factor, self._theta, self._n_rows, self._n_cols)
-        top_rail = np.linspace(frame_dict['upper_left'], frame_dict['upper_right'], self._n_cols) + 0.0j
-        bottom_rail = np.linspace(frame_dict['bottom_left'], frame_dict['bottom_right'], self._n_cols) + 0.0j
+        frame_dict = get_complex_frame(self._center_point,
+                                       self._zoom_factor, self._theta, self._n_rows, self._n_cols)
+        top_rail = np.linspace(frame_dict['upper_left'],
+                               frame_dict['upper_right'], self._n_cols) + 0.0j
+        bottom_rail = np.linspace(frame_dict['bottom_left'],
+                                  frame_dict['bottom_right'], self._n_cols) + 0.0j
 
         return top_rail, bottom_rail
 
 
     def get_styles(self):
         """ left_style, right_style = self.get_styles() """
-        frame_dict = get_complex_frame(self._center_point, self._zoom_factor, self._theta, self._n_rows, self._n_cols)
-        left_style = np.linspace(frame_dict['upper_left'], frame_dict['bottom_left'], self._n_rows) + 0.0j
-        right_style = np.linspace(frame_dict['upper_right'], frame_dict['bottom_right'], self._n_rows) + 0.0j
+        frame_dict = get_complex_frame(self._center_point,
+                                       self._zoom_factor, self._theta, self._n_rows, self._n_cols)
+        left_style = np.linspace(frame_dict['upper_left'],
+                                 frame_dict['bottom_left'], self._n_rows) + 0.0j
+        right_style = np.linspace(frame_dict['upper_right'],
+                                  frame_dict['bottom_right'], self._n_rows) + 0.0j
 
         return left_style, right_style
 
@@ -225,69 +234,13 @@ class ComplexPlane:
     def get_complex_pixels(self):
         """ complex_pixels = self.get_complex_pixels() """
         left_style, right_style = self.get_styles()
-        complex_pixels = np.zeros((self._n_rows, self._n_cols)) + np.zeros((self._n_rows, self._n_cols)) * 1j
+        complex_pixels = np.zeros((self._n_rows,
+                                   self._n_cols)) + np.zeros((self._n_rows, self._n_cols)) * 1j
 
         for k in range(0, self._n_rows):
             complex_pixels[k, :] = np.linspace(left_style[k], right_style[k], self._n_cols)
 
         return complex_pixels
 
-    
+
 """ class ComplexPlane:  bottom line - wuf wuf """
-
-# This is the "we are all adults here" pythonic traditional way for abstract classes
-class exampl_base():
-
-    def haka_haka(self):
-        return NotImplementedError('Fix me! Fix me!')
-
-
-class exampl_implement(exampl_base):
-
-    def haka_haka(self):
-        return 'whadayaexpect4free?'
-
-
-# This is the newer way ...
-from abc import ABCMeta, abstractmethod
-
-class EquationIterator(metaclass=ABCMeta):
-
-    def __init__(self, p=1.0, ETM=32, ETB=32, cpObj=ComplexPlane()):
-        """ parameters, EscapeTimeMax, EscapeTimeBoundry, complexplaneObject  """
-        self._ETM = ETM
-        self._ETB = ETB
-        self._p = p
-        self._cpObj = cpObj
-
-    @abstractmethod
-    def iter_mat(self, dakine='DUCK'):
-        """ test dakine """
-        # print(dakine)
-        # return 'de_nada'
-
-
-
-class DoDaKine(EquationIterator):
-
-
-    def iter_mat(self, dakine='Quack_Quack'):
-        print(self._p, '\t', dakine)
-        return 'hey_hey'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-""" EOF  """

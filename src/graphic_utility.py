@@ -15,7 +15,7 @@ from PIL import ImageColor as IC
 import colorsys
 
 def mat2graphic(Z):
-    """ M = mat2graphic(Z)
+    """ M, nClrs = mat2graphic(Z)
         Use all the transformation tricks to prepare input matrix Z
         for conversion to a viewable image.
     Args:
@@ -166,6 +166,13 @@ def mats3_as_hsv_2rgb(H, S, V):
             
     return I
 
+def paint_ET_seq(ET, max_w=800):
+    n_max = ET.max()
+    ET_seq = np.int_(ET == 0)
+    for n in range(1, n_max):
+        ET_seq = np.concatenate((ET_seq, np.int_(ET==n) ))
+
+    return ET_seq
 
 def Z_ET_to_show(Z, ET):
     """ quick showable graphic of escape-time calculation results """
@@ -294,7 +301,36 @@ def now_name(n_digits=9, prefi_str=None, suffi_str=None):
     """ get a human readable time stamp name unique up to 1 / 1e9 seconds """
     t0 = time.time()
     t_dec = t0 - np.floor(t0)
-    ahora_nombre = time.strftime("%a_%d_%b_%Y_%H_%M_%S", time.localtime()) + '_' + ('%0.09f'%(t_dec))[2:n_digits+2]
+    ahora_nombre = time.strftime("%a_%d_%b_%Y_%H_%M_%S",
+                                 time.localtime()) + '_' + ('%0.09f'%(t_dec))[2:n_digits+2]
     if prefi_str is None: prefi_str = ''
     if suffi_str is None: suffi_str = ''
     return prefi_str + ahora_nombre + suffi_str
+
+class hsv_object:
+
+    def __init__(self, Z0, Z, ET):
+        self._Z0 = Z0
+        self._Z = Z
+        self._ET = ET
+        self._D = np.abs(Z-Z0)
+        self._R = np.arctan2(np.imag(Z-Z0), np.real(Z-Z0))
+
+        self.V = 1 - mat2graphic(self._D)
+        self.S = 1 - mat2graphic(self._ET)
+        self.H = mat2graphic(self._R)
+
+    def get_image(self):
+
+        # self.S = 1 - mat2graphic(self._D)
+        # self.V = 1 - mat2graphic(self._ET)
+        # self.H = mat2graphic(self._R)
+
+        return mats3_as_hsv_2rgb(self.H, self.S, self.V)
+
+# def Z_ET_to_show(Z, ET):
+#     """ quick showable graphic of escape-time calculation results """
+#     V = 1 - graphic_norm(Z)
+#     S = 1 - graphic_norm(ET)
+#     H = graphic_norm(np.arctan2(np.imag(Z), np.real(Z)))
+#     return mats3_as_hsv_2rgb(H, S, V)

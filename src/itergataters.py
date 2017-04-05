@@ -14,7 +14,7 @@ import numpy as np
 import z_plane as zp
 
 
-def get_primitives(list_tuple, par_set, delete_temp_dir=True):
+def get_primitives(list_tuple, par_set):
     """ ET, Z, Z0 = get_primitives(list_tuple, par_set)
     Args:
         list_tuple:
@@ -26,6 +26,10 @@ def get_primitives(list_tuple, par_set, delete_temp_dir=True):
         Z:                  Complex matrix after iteration
         Z0:                 Complex plane matrix before iteration
     """
+    if 'delete_temp_dir' in par_set:
+        delete_temp_dir = par_set['delete_temp_dir']
+    else:
+        delete_temp_dir = True
     par_set['tmp_dir'] = get_tmp_dir(par_set['dir_path'], 'tmp')
     complex_frame, par_set = zp.get_frame_from_dict(par_set)
     n_cores = mp.cpu_count()
@@ -89,25 +93,63 @@ def write_row(complex_frame, list_tuple, par_set, row_number):
                         'tmp_dir', 'it_max', 'max_d'
         row_number:     integer number of the row to process
     """
-    left_style = np.linspace(complex_frame['upper_left'], complex_frame['bottom_left'], par_set['n_rows'])
-    right_style = np.linspace(complex_frame['upper_right'], complex_frame['bottom_right'], par_set['n_rows'])
+    if 'eq_order' in par_set:
+        eq_order = par_set['eq_order']
+    else:
+        eq_order = 0
+
+    left_style = np.linspace(complex_frame['upper_left'],
+                             complex_frame['bottom_left'], par_set['n_rows'])
+    right_style = np.linspace(complex_frame['upper_right'],
+                              complex_frame['bottom_right'], par_set['n_rows'])
 
     row_array = np.linspace(left_style[row_number], right_style[row_number], par_set['n_cols'])
 
     it_max = par_set['it_max']
     max_d = par_set['max_d']
-    Z_arr = np.zeros((3,row_array.size),complex)
-    col = 0
-    for Z0 in row_array:
-        Z_arr[0, col] = Z0
-        Z_arr[1, col], Z_arr[2, col] = tuplerator(list_tuple, Z0, it_max, max_d)
-        col += 1
-    Z_arr[1, :] = Z_arr[1, :] + complex(0.0, float(row_number))
+    # Z_arr = [Z0, ET, Z] x row size
+    Z_arr = np.zeros((3,row_array.size), complex)
+
+    if eq_order == 0:
+        col = 0
+        for Z0 in row_array:
+            Z_arr[0, col] = Z0
+            Z_arr[1, col], Z_arr[2, col] = tuplerator(list_tuple, Z0, it_max, max_d)
+            col += 1
+    elif eq_order == 2:
+        col = 0
+        for Z0 in row_array:
+            Z_arr[0, col] = Z0
+            Z_arr[1, col], Z_arr[2, col] = tuplerator_2(list_tuple, Z0, it_max, max_d)
+            col += 1
+
+    Z_arr[1, :] = Z_arr[1, :] + complex(0.0, float(row_number)) # row number as imaginary part
     file_name = os.path.join(par_set['tmp_dir'], ahora_seq_name('row_%d_'%(row_number), '.txt'))
     with open(file_name, 'wb') as file_handle:
         Z_arr.dump(file_handle)
 
-        
+def tuplerator_2(list_tuple, Z0, it_max, max_d):
+    ET = 0
+    Z = Z0
+    Zm1 = Z0
+    Zm2 = Z0
+    d = 0
+    while (ET <= it_max) & (np.isfinite(d)) & (d < max_d):
+        Z_was = Z
+        try:
+            for fcn_hndl, P in list_tuple:
+                Z, Zm1, Zm2 = fcn_hndl(Z, P, Z0, ET, Zm1, Zm2)
+            d = np.abs(Z - Z0)
+
+        except:
+            return max(1, ET - 1), Z_was
+        ET += 1
+    # if (ET >= it_max) & (np.isfinite(d)) & (d < max_d):
+    if (np.isfinite(d)):
+        return ET, Z
+    else:
+        return max(1, ET - 1), Z_was
+
 def tuplerator(list_tuple, Z0, it_max, max_d):
     """ ET, Z = tuplerator(list_tuple, Z0, it_max, max_d)
         function iterator for two tuple list (with at least one tuple)
@@ -141,8 +183,8 @@ def tuplerator(list_tuple, Z0, it_max, max_d):
             d = np.abs(Z - Z0)
         except:
             return max(1, ET - 1), Z_was
-        
-    if (ET >= it_max) & (np.isfinite(d)) & (d < max_d):
+    # if (ET >= it_max) & (np.isfinite(d)) & (d < max_d):    
+    if (np.isfinite(d)):
         return ET, Z
     else:
         return max(1, ET - 1), Z_was
