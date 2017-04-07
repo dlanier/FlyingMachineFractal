@@ -30,6 +30,7 @@ def get_primitives(list_tuple, par_set):
         delete_temp_dir = par_set['delete_temp_dir']
     else:
         delete_temp_dir = True
+    
     par_set['tmp_dir'] = get_tmp_dir(par_set['dir_path'], 'tmp')
     complex_frame, par_set = zp.get_frame_from_dict(par_set)
     n_cores = mp.cpu_count()
