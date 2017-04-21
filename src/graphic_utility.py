@@ -235,6 +235,59 @@ def mat_to_gray(V):
     return I
 
 
+def mat_to_red(V):
+    R_max = 255
+    R_floor = 180
+    G_max = 250
+    G_floor = 30
+    B_max = 250
+    B_floor = 30
+    return mat_to_RGB(V, R_max, G_max, B_max, R_floor, G_floor, B_floor)
+
+
+def mat_to_green(V):
+    R_max = 250
+    R_floor = 30
+    G_max = 255
+    G_floor = 130
+    B_max = 250
+    B_floor = 30
+    return mat_to_RGB(V, R_max, G_max, B_max, R_floor, G_floor, B_floor)
+
+
+def mat_to_blue(V):
+    R_max = 250
+    R_floor = 30
+    G_max = 250
+    G_floor = 30
+    B_max = 255
+    B_floor = 130
+    return mat_to_RGB(V, R_max, G_max, B_max, R_floor, G_floor, B_floor)
+
+
+def mat_to_RGB(V, R_max, G_max, B_max, R_floor=0, G_floor=0, B_floor=0):
+    """ I = mat_to_gray(V)
+        matrix of values V, converted to a gray scale image
+    Args:
+        V:  rows x cols x 1 numerical matrix
+    Returns:
+        I:  rows x cols x 3 grayscale image
+    """
+    R = R_max - R_floor
+    G = G_max - G_floor
+    B = B_max - B_floor
+    V = 1 - mat2graphic(V)
+    n_rows = V.shape[0]
+    n_cols = V.shape[1]
+    I = IP.new('RGB', (n_cols, n_rows))
+    for row in range(0, I.height):
+        for col in range(0, I.width):
+            P = tuple(np.int_(
+                [R_floor + V[row, col] * R, G_floor + V[row, col] * G, B_floor + V[row, col] * B]))
+                
+            I.putpixel((col, row), P)
+    return I
+
 def get_a_snowscreen(h, w):
     """ color_snow_image = get_a_snowscreen(h, w)
         get a pseudo-random rgb PIL image
