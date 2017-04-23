@@ -25,7 +25,7 @@ def get_primitives(list_tuple, par_set):
         ET:                 Escape Time matrix (may be float - fractional escape times possible)
         Z:                  Complex matrix after iteration
         Z0:                 Complex plane matrix before iteration
-    """
+    """        
     if 'delete_temp_dir' in par_set:
         delete_temp_dir = par_set['delete_temp_dir']
     else:
@@ -99,16 +99,18 @@ def write_row(complex_frame, list_tuple, par_set, row_number):
     else:
         eq_order = 0
 
-    left_style = np.linspace(complex_frame['upper_left'],
-                             complex_frame['bottom_left'], par_set['n_rows'])
-    right_style = np.linspace(complex_frame['upper_right'],
-                              complex_frame['bottom_right'], par_set['n_rows'])
-
-    row_array = np.linspace(left_style[row_number], right_style[row_number], par_set['n_cols'])
+    if 'RANDOM_PLANE' in par_set and par_set['RANDOM_PLANE'] == True:
+        SF = np.abs(complex_frame['upper_left'] - complex_frame['bottom_right'])
+        row_array = (np.random.randn(par_set['n_cols']) + np.random.randn(par_set['n_cols']) * 1j) * SF
+    else:
+        left_style = np.linspace(complex_frame['upper_left'],
+                                 complex_frame['bottom_left'], par_set['n_rows'])
+        right_style = np.linspace(complex_frame['upper_right'],
+                                  complex_frame['bottom_right'], par_set['n_rows'])
+        row_array = np.linspace(left_style[row_number], right_style[row_number], par_set['n_cols'])
 
     it_max = par_set['it_max']
     max_d = par_set['max_d']
-    # Z_arr = [Z0, ET, Z] x row size
     Z_arr = np.zeros((3,row_array.size), complex)
 
     if eq_order == 0:
