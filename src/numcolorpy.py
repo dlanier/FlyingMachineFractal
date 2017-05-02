@@ -16,6 +16,22 @@ from PIL import Image as IP
 from PIL import ImageColor as IC
 import colorsys
 
+def range_norm(Z, lo=0.0, hi=1.0):
+    """ normaize input matrix Z within a lo - hi range 
+    """
+    I = graphic_norm(Z)
+    hi = max(min(hi, 1.0), 0.0)
+    lo = min(max(lo, 0.0), 1.0)
+    low_fence = min(hi, lo)
+    hi_fence = max(hi, lo)
+
+    if low_fence == hi_fence:
+        return I
+    
+    v_span = hi_fence - low_fence
+    I = I * v_span + low_fence
+    
+    return I
 def etg_norm(Z0, Z, ET):
     """ Zd, Zr, ETn = etg_norm(Z0, Z, ET); Graphically usable matrices from escape time algorithm result 
     """
@@ -83,6 +99,34 @@ def flat_index(float_mat):
     n_colors = enumeration_value + 1
     
     return float_mat, n_colors
+
+def gray_mat(V):
+    n_rows = V.shape[0]
+    n_cols = V.shape[1]
+    V = V * 255
+    I = IP.new('RGB', (n_cols, n_rows))
+    for row in range(0, I.height):
+        for col in range(0, I.width):
+            P = tuple(np.int_([V[row, col], V[row, col], V[row, col]]))
+            I.putpixel((col, row), P)
+    return I
+
+def rgb_2_hsv_mat(H, S, V):
+    n_rows = H.shape[0]
+    n_cols = H.shape[1]
+    I = IP.new('RGB', (n_cols, n_rows))
+    
+    for row in range(0, I.height):
+        for col in range(0, I.width):
+            red, green, blue = colorsys.hsv_to_rgb(H[row, col], S[row, col], V[row, col])
+            red = int(np.round( red * 255 ))
+            green = int(np.round( green * 255 ))
+            blue = int(np.round( blue * 255 ))
+            P = (red, green, blue)
+            I.putpixel((col, row), P)
+            
+    return I
+
 
 
 def mat_to_gray(V, max_v=255, min_v=0):
