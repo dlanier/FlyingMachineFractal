@@ -25,4 +25,14 @@
 
 [Snakes on a Thing](https://dlanier.github.io/FlyingMachineFractal/SnakesOnaThing.html)
 
+[Clownscape](https://dlanier.github.io/FlyingMachineFractal/unicorn_in_utero.html)
+
+[Clownscape](https://dlanier.github.io/FlyingMachineFractal/T_Spake_Z.html)
+
+[Clownscape](https://dlanier.github.io/FlyingMachineFractal/swanfish_snail.html)
+
+[Clownscape](https://dlanier.github.io/FlyingMachineFractal/starfish_ish.html)
+
+[Clownscape](https://dlanier.github.io/FlyingMachineFractal/Radio_Ornament.html)
+
 
