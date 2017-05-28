@@ -9,4 +9,20 @@
 
 [Clownscape](https://dlanier.github.io/FlyingMachineFractal/clownscape.html)
 
+[Beetle Kine](https://dlanier.github.io/FlyingMachineFractal/beetle_ish.html)
+
+[Bug | Bear](https://dlanier.github.io/FlyingMachineFractal/bug_or_bear.html)
+
+[Shellfish](https://dlanier.github.io/FlyingMachineFractal/cowry_shellish.html)
+
+[Dread Skull](https://dlanier.github.io/FlyingMachineFractal/dread_skull.html)
+
+[El Gato](https://dlanier.github.io/FlyingMachineFractal/ElGato.html)
+
+[Fleur de Okeeffe](https://dlanier.github.io/FlyingMachineFractal/fleur_de_Okeeffe.html)
+
+[Head Thunder](https://dlanier.github.io/FlyingMachineFractal/HeadThunder.html)
+
+[Snakes on a Thing](https://dlanier.github.io/FlyingMachineFractal/SnakesOnaThing.html)
+
 
