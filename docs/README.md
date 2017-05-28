@@ -11,7 +11,7 @@
 
 [Beetle Kine](https://dlanier.github.io/FlyingMachineFractal/beetle_ish.html)
 
-[Bug | Bear](https://dlanier.github.io/FlyingMachineFractal/bug_or_bear.html)
+[Bug or Bear](https://dlanier.github.io/FlyingMachineFractal/bug_or_bear.html)
 
 [Shellfish](https://dlanier.github.io/FlyingMachineFractal/cowry_shellish.html)
 
