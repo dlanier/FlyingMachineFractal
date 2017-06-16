@@ -125,12 +125,59 @@ def write_row(complex_frame, list_tuple, par_set, row_number):
             Z_arr[0, col] = Z0
             Z_arr[1, col], Z_arr[2, col] = tuplerator_2(list_tuple, Z0, it_max, max_d)
             col += 1
+    elif eq_order == -1:
+        col = 0
+        for Z0 in row_array:
+            Z_arr[0, col] = Z0
+            Z_arr[1, col], Z_arr[2, col] = tuplerator_3(list_tuple, Z0, it_max, max_d, par_set)
+            col += 1
 
     Z_arr[1, :] = Z_arr[1, :] + complex(0.0, float(row_number)) # row number as imaginary part
     file_name = os.path.join(par_set['tmp_dir'], ahora_seq_name('row_%d_'%(row_number), '.txt'))
     with open(file_name, 'wb') as file_handle:
         Z_arr.dump(file_handle)
 
+        
+def tuplerator_3(list_tuple, Z0, it_max, max_d, par_set):
+    """ ET, Z = tuplerator(list_tuple, Z0, it_max, max_d)
+        function iterator for two tuple list (with at least one tuple)
+        list_tuple = [(function_1, (p1, p2,... , pn)), (function_2, (p1, p2,... , pn))]
+        
+    Args:
+        list_tuple: [ ( function_handle_01,(fh_01_p1, fh_01_p2,...) ),... (fh_n,(p1, p2,...)) ]
+                    list of tuples: function handle (not lambda fcn) & internal parameters
+        Z0:         complex vector - starting point
+        it_max:     maximum number of iterations
+        max_d:      quit iterating and return distance
+        
+    Returns:
+        ET:         number of iterations to finishing point
+        Z:          complex vector - finishing point
+        
+    Prototype:
+        def jsV(Z, P):
+            Z = Z**P[0] - P[1]
+            return Z
+    """
+    ET = 0
+    Z = Z0
+    d = 0
+    while (ET <= it_max) & (np.isfinite(d)) & (d < max_d):
+        ET += 1
+        Z_was = Z
+        try:
+            for fcn_hndl, P in list_tuple:
+                Z = fcn_hndl(Z, P, Z0, ET, d, par_set)
+                # checkered_daemon(Z, p, Z0=None, ET=None, d=0, par_set=None)
+            d = np.abs(Z - Z0)
+        except:
+            return max(1, ET - 1), Z_was
+    # if (ET >= it_max) & (np.isfinite(d)) & (d < max_d):    
+    if (np.isfinite(d)):
+        return ET, Z
+    else:
+        return max(1, ET - 1), Z_was
+        
 def tuplerator_2(list_tuple, Z0, it_max, max_d):
     ET = 0
     Z = Z0
@@ -191,6 +238,8 @@ def tuplerator(list_tuple, Z0, it_max, max_d):
         return ET, Z
     else:
         return max(1, ET - 1), Z_was
+    
+    
     
     
 def ahora_seq_name(prefi_str=None, suffi_str=None):
