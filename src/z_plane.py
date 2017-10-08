@@ -135,6 +135,19 @@ def show_complex_matrix(Z0,N_DEC=3):
 
             print(row_str)
 
+def rnd_lambda(s=1):
+    """ random parameters s.t. a*d - b*c = 1 """
+    b = np.random.random()
+    c = np.random.random()
+    ad = b*c + 1
+    a = np.random.random()
+    d = ad / a
+    lamb0 = {'a': a, 'b': b, 'c': c, 'd': d}
+    lamb0 = np.array([a, b, c, d]) * s
+    
+    return lamb0
+
+
 class ComplexPlane:
     
     

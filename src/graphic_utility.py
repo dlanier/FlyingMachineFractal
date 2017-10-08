@@ -316,6 +316,41 @@ def show_matrix(A, n_dec=3):
         print(s)
     return
 
+def plane_gradient(X):
+    """ DX, DY = plane_gradient(X) 
+    Args:
+        X:          matrix
+    Returns:
+        DX:         gradient in X direction
+        DY:         gradient in Y direction
+    """
+    n_rows = X.shape[0]
+    n_cols = X.shape[1]
+    DX = np.zeros(X.shape)
+    DY = np.zeros(X.shape)
+    for r in range(0, n_rows):
+        xr = X[r, :]
+        for c in range(0, n_cols - 1):
+            DX[r,c] = xr[c+1] - xr[c]
+            
+    for c in range(0, n_cols):
+        xc = X[:, c]
+        for r in range(0, n_rows -1):
+            DY[r, c] = xc[r+1] - xc[r]
+        
+    return DX, DY
+
+def grad_Im(X):
+    """
+    Args:
+        X:               matrix
+    Returns:
+        Gradient_Image:  positive matrix representation of the X-Y gradient of X
+    """
+    DX, DY = plane_gradient(X)
+    return graphic_norm(DX + DY * 1j)
+
+
 def integer_to_alphabet_number(N):
     """ convert integer to spreadsheet column lettering 
     
@@ -401,3 +436,5 @@ class hsv_object:
 #     S = 1 - graphic_norm(ET)
 #     H = graphic_norm(np.arctan2(np.imag(Z), np.real(Z)))
 #     return mats3_as_hsv_2rgb(H, S, V)
+
+
