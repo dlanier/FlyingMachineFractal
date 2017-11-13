@@ -32,6 +32,8 @@ def range_norm(Z, lo=0.0, hi=1.0):
     I = I * v_span + low_fence
     
     return I
+
+
 def etg_norm(Z0, Z, ET):
     """ Zd, Zr, ETn = etg_norm(Z0, Z, ET); Graphically usable matrices from escape time algorithm result 
     """
@@ -40,6 +42,7 @@ def etg_norm(Z0, Z, ET):
     Zd = mat2graphic(Zv)
     Zr = mat2graphic(np.arctan2(np.imag(Zv), np.real(Zv)))
     return Zd, Zr, ETn
+
 
 def mat2graphic(Z):
     """ M, nClrs = mat2graphic(Z)
@@ -52,6 +55,7 @@ def mat2graphic(Z):
     """
     M, nClrs = flat_index(np.abs(Z))
     return graphic_norm(M)
+
 
 def graphic_norm(Z):
     """ rescale matrix z to distance (float) s.t.   
@@ -100,6 +104,7 @@ def flat_index(float_mat):
     
     return float_mat, n_colors
 
+
 def gray_mat(V):
     n_rows = V.shape[0]
     n_cols = V.shape[1]
@@ -110,6 +115,7 @@ def gray_mat(V):
             P = tuple(np.int_([V[row, col], V[row, col], V[row, col]]))
             I.putpixel((col, row), P)
     return I
+
 
 def rgb_2_hsv_mat(H, S, V):
     n_rows = H.shape[0]
@@ -126,7 +132,6 @@ def rgb_2_hsv_mat(H, S, V):
             I.putpixel((col, row), P)
             
     return I
-
 
 
 def mat_to_gray(V, max_v=255, min_v=0):
@@ -169,6 +174,7 @@ def mat_to_blue(V):
     B_max = 255
     B_floor = 130
     return mat_to_Shade(V, R_max, G_max, B_max, R_floor, G_floor, B_floor)
+
 
 def mat_to_Shade(V, R_max, G_max, B_max, R_floor=0, G_floor=0, B_floor=0):
     """ I = mat_to_gray(V)
