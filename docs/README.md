@@ -1,5 +1,7 @@
-[Git-Hub io html link](https://dlanier.github.io/FlyingMachineFractal/)
-[Git-Hub repository](https://github.com/dlanier/FlyingMachineFractal)
+
+# [Git-Hub io html link](https://dlanier.github.io/FlyingMachineFractal/)
+
+# [Git-Hub repository](https://github.com/dlanier/FlyingMachineFractal)
 
 # Modules usage documentation.
 
