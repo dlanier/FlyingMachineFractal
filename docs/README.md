@@ -1,4 +1,7 @@
-# Flying Machine Fractal documentation links
+[Git-Hub io html link](https://dlanier.github.io/FlyingMachineFractal/)
+[Git-Hub repository](https://github.com/dlanier/FlyingMachineFractal)
+
+# Modules usage documentation.
 
 [ComplexPlane class: API](https://dlanier.github.io/FlyingMachineFractal/z_plane_class_ComplexPlane.html)
 
