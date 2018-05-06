@@ -3,6 +3,7 @@ complex plane functions and class for getting pixels in three different measurin
 """
 import numpy as np
 
+# print_order controls display of frame in complex_frame_dict_to_string
 print_order = ['upper_left', 'top_center', 'upper_right',
                'left_center', 'center_point', 'right_center',
               'bottom_left', 'bottom_center', 'bottom_right']
@@ -49,7 +50,6 @@ def get_complex_frame(CP, ZM, theta, h=1, w=1):
 
     return frame_dict
 
-
 def complex_to_string(z, N_DEC=6):
     """ format single complex number to string with n decimal places """
     MAX_DEC = 17
@@ -72,7 +72,6 @@ def complex_to_string(z, N_DEC=6):
         z_str = ' ' + fs % zr + s1
 
     return z_str
-
 
 def get_aligned_dict_string(d, N_DEC=3):
     """ pretty_string = z_plane.get_aligned_dict_string(d, N_DEC=3) """
@@ -100,7 +99,6 @@ def get_aligned_dict_string(d, N_DEC=3):
             
     return out_string + '\n'
 
-
 def complex_frame_dict_to_string(frame_dict, N_DEC=4):
     """ get a formatted list of strings """
     STR_L = 14
@@ -116,7 +114,6 @@ def complex_frame_dict_to_string(frame_dict, N_DEC=4):
         else:
             frame_string += '\t'
     return frame_string
-
 
 def show_complex_matrix(Z0,N_DEC=3):
     """ display a complex matrix or array """
@@ -149,8 +146,26 @@ def rnd_lambda(s=1):
 
 
 class ComplexPlane:
-    
-    
+    """                         parameterized grid of complex numbers
+    Args:
+        CP:                     self._center_point    -- complex vector from origin to center of grid
+        ZM:                     self._zoom_factor     -- Magnify (Zoom IN as ZM increases)
+        theta:                  self._theta           -- Counter Clockwise rotation of the plane
+        h:                      self._n_rows          -- number of rows in the grid
+        w:                      self._n_cols          -- number of columns in the grid
+
+    methods:
+        display_self:           command line printout of the self definition parameters (Args)
+        get_complex_axes:       grid center arrays of complex vectors
+        get_complex_col:        column array of complex vectors
+        get_complex_row:        row array of complex vectors
+        get_complex_pixels:     matrix of complex numbers == the grid
+        get_escape_bound:       get an escpe distance based on the grids corner to corner vector length
+        get_parameters_dict:    get the self definition parameters (Args) as a python dict
+        get_rails:              top and bottom arrays of complex vectors
+        get_styles:             left and right arrays of complex vectors
+        load_dict:              re-initialize the object with new set of definition parameters (Args)
+    """
     def __init__(self, CP=0.0+0.0*1j, ZM=1.0, theta=0.0, h=5, w=5):
         self._center_point = CP
         self._zoom_factor = max(ZM, 1e-15)
@@ -176,7 +191,6 @@ class ComplexPlane:
         if 'n_cols' in parameters_dict:
             self._n_cols = parameters_dict['n_cols']
 
-
     def get_parameters_dict(self):
         """ parameters_dict = self.get_parameters_dict() """
         parameters_dict = {}
@@ -187,13 +201,11 @@ class ComplexPlane:
         parameters_dict['n_cols'] = self._n_cols    
         return parameters_dict
 
-    
-    def get_escape_bound(self):
+    def get_escape_bound(self, boundry_scale=12):
         """ escape time algorithm best infinity safe iteration distance """
         corner_scale = max(self._n_rows/self._n_cols, self._n_cols/self._n_rows)
-        return corner_scale * 12 / self._zoom_factor
-    
-    
+        return corner_scale * boundry_scale / self._zoom_factor
+
     def get_complex_axes(self):
         """ horiz_axis, vert_axis = self.get_complex_axes() """
         frame_dict = get_complex_frame(self._center_point,
@@ -204,7 +216,6 @@ class ComplexPlane:
                                  frame_dict['right_center'], self._n_cols) + 0.0j
 
         return horiz_axis, vert_axis
-
 
     def get_rails(self):
         """ top_rail, bottom_rail = self.get_styles() """
@@ -217,7 +228,6 @@ class ComplexPlane:
 
         return top_rail, bottom_rail
 
-
     def get_styles(self):
         """ left_style, right_style = self.get_styles() """
         frame_dict = get_complex_frame(self._center_point,
@@ -229,20 +239,17 @@ class ComplexPlane:
 
         return left_style, right_style
 
-
     def get_complex_row(self, row_number):
         """ row_vectors = self.get_complex_row() """
         left_style, right_style = self.get_styles()
 
         return np.linspace(left_style[row_number], right_style[row_number], self._n_cols) + 0.0j
 
-
     def get_complex_col(self, col_number):
         """ col_vectors = self.get_complex_col() """
         top_rail, bottom_rail = self.get_styles()
 
         return np.linspace(top_rail[col_number], bottom_rail[col_number], self._n_rows) + 0.0j
-
 
     def get_complex_pixels(self):
         """ complex_pixels = self.get_complex_pixels() """
