@@ -1,16 +1,13 @@
-
-# [Git-Hub io](https://dlanier.github.io/FlyingMachineFractal/)
-
 # [Git-Hub (code repository)](https://github.com/dlanier/FlyingMachineFractal)
 
-# Modules usage documentation.
+# Source code function usage examples.
 
 [ComplexPlane class: API](https://dlanier.github.io/FlyingMachineFractal/z_plane_class_ComplexPlane.html)
 
 [complex plane static functions](https://dlanier.github.io/FlyingMachineFractal/z_plane_functions.html)
 
 
-# Graphical Notebooks
+# Graphical Notebook examples
 
 [Clownscape](https://dlanier.github.io/FlyingMachineFractal/clownscape.html)
 
