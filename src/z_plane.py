@@ -166,6 +166,7 @@ class ComplexPlane:
         get_styles:             left and right arrays of complex vectors
         load_dict:              re-initialize the object with new set of definition parameters (Args)
     """
+
     def __init__(self, CP=0.0+0.0*1j, ZM=1.0, theta=0.0, h=5, w=5):
         self._center_point = CP
         self._zoom_factor = max(ZM, 1e-15)

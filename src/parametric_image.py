@@ -11,13 +11,22 @@ mradmstr514226508@gmail.com
 
 Restarted - Redefined Sunday Seis de Mayo, 2018
 """
-import sys
+import warnings
+warnings.filterwarnings('ignore')
 
-sys.path.insert(1, '../src')
+import os
+import sys
+import numpy as np
+import time
+
+from IPython.display import display
+
+sys.path.insert(1, '../src');
 import z_plane as zp
-import graphic_utility as gu
+import graphic_utility as gu;
 import itergataters as ig
 import numcolorpy as ncp
+
 
 class BUFA:
     """ Behaviorally Unecpected Functional Algorithms BUFA
@@ -49,10 +58,10 @@ class BUFA:
             - Recolor
     """
 
-    def __init__(self, CP=0.0+0.0*1j, ZM=1.0, theta=0.0, h=5, w=5):
+    def __init__(self, plane=zp.ComplexPlane()):
 
         """ ParametricImage constructor """
-        self._plane = zp.ComplexPlane(CP=0.0+0.0*1j, ZM=1.0, theta=0.0, h=5, w=5)
+        self._plane = plane
         self.rnd_lambda = zp.rnd_lambda()
         print('ParametricImage happy happy initialization under construction', self.rnd_lambda)
 
