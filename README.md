@@ -4,7 +4,8 @@ A project to save, share and find functions that produce artistic graphical outp
 # Motovation - beautiful graphic figures at any scale arise from unpredicted functions - find better ways to find them.
 [GitHub .io Exhibit](https://dlanier.github.io/FlyingMachineFractal/)
 ****
-### Special Thanks to:
+
+### Thanks to Social Environments such as these
 * Grossmont Community College
 * SDSU
 * Grandmas Coffee House
