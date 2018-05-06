@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """
+numcolorpy.py
 Created Saturday April 22 2017
 
 @author: del

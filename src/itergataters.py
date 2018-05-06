@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """
+itergators.py
 @author: del
 lanier4@illinois.edu
 mradmstr514226508@gmail.com
@@ -340,3 +341,10 @@ def remove_tmp_dir(dir_name):
         pass
 
     return
+
+
+class ETA_iterator:
+
+    def __init__(self, it_max=32, max_d=12):
+        self._it_max = it_max
+        self._max_d = max_d
