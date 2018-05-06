@@ -3,7 +3,9 @@ A project to save, share and find functions that produce artistic graphical outp
 
 # Motovation - beautiful graphic figures at any scale arise from unpredicted functions - find better ways to find them.
 
-## Special Thanks to:
+****
+### Special Thanks to:
+* Grossmont Community College
 * SDSU
 * Grandmas Coffee House
 * The Adams Street Roastery
@@ -11,3 +13,4 @@ A project to save, share and find functions that produce artistic graphical outp
 * Cafe Zojo
 * Flying M Pizza's Anonymous Coffee House
 * UIUC community
+****
