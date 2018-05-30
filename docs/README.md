@@ -37,4 +37,6 @@
 
 [Radio Ornament](https://dlanier.github.io/FlyingMachineFractal/Radio_Ornament.html)
 
+# Prime Number Patterns
 
+[Spiraling Integers Prime Patterns](https://dlanier.github.io/FlyingMachineFractal/prime_spiral_2_png.html)
