@@ -46,7 +46,7 @@ def decPwrAFx(Z, p, Z0=None, ET=None):
     Z = 1/Z - Z^(n*Z^(P(n)^n) / sqrt(pi));
     """
     for n in range(1,len(P)):
-        Z = 1/Z - Z**(n * Z**(P[n]**n) / p[0]);
+        Z = 1/Z - Z**(n * Z**(P[n]**n) / p[0])
     return Z
 
 

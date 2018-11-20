@@ -12,7 +12,15 @@ import multiprocessing as mp
 
 import numpy as np
 
-import z_plane as zp
+import zplain as zp
+
+def_par_set = {'writable_dir':'.', 'iter_max':32, 'dist_max':12}
+
+class ETA_iterator:
+
+    def __init__(self, it_max=32, max_d=12):
+        self._it_max = it_max
+        self._max_d = max_d
 
 
 def get_primitives(list_tuple, par_set):
@@ -164,6 +172,8 @@ def tuplerator_3(list_tuple, Z0, it_max, max_d, par_set):
     ET = 0
     Z = Z0
     d = 0
+    ET += 1
+    Z_was = Z
     while (ET <= it_max) & (np.isfinite(d)) & (d < max_d):
         ET += 1
         Z_was = Z
@@ -179,13 +189,16 @@ def tuplerator_3(list_tuple, Z0, it_max, max_d, par_set):
         return ET, Z
     else:
         return max(1, ET - 1), Z_was
-        
+
+
 def tuplerator_2(list_tuple, Z0, it_max, max_d):
     ET = 0
     Z = Z0
     Zm1 = Z0
     Zm2 = Z0
     d = 0
+    ET += 1
+    Z_was = Z
     while (ET <= it_max) & (np.isfinite(d)) & (d < max_d):
         Z_was = Z
         try:
@@ -201,6 +214,7 @@ def tuplerator_2(list_tuple, Z0, it_max, max_d):
         return ET, Z
     else:
         return max(1, ET - 1), Z_was
+
 
 def tuplerator(list_tuple, Z0, it_max, max_d):
     """ ET, Z = tuplerator(list_tuple, Z0, it_max, max_d)
@@ -226,6 +240,8 @@ def tuplerator(list_tuple, Z0, it_max, max_d):
     ET = 0
     Z = Z0
     d = 0
+    ET += 1
+    Z_was = Z
     while (ET <= it_max) & (np.isfinite(d)) & (d < max_d):
         ET += 1
         Z_was = Z
@@ -241,9 +257,7 @@ def tuplerator(list_tuple, Z0, it_max, max_d):
     else:
         return max(1, ET - 1), Z_was
     
-    
-    
-    
+
 def ahora_seq_name(prefi_str=None, suffi_str=None):
     """ alpha_time_stamped_name = ahora_seq_name(prefi_str, suffi_str)
         locally unique (1/1e12 sec) alphanumeric-integer time stamp name
@@ -342,10 +356,3 @@ def remove_tmp_dir(dir_name):
         pass
 
     return
-
-
-class ETA_iterator:
-
-    def __init__(self, it_max=32, max_d=12):
-        self._it_max = it_max
-        self._max_d = max_d

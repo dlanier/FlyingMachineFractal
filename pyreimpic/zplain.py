@@ -165,5 +165,4 @@ class ComplexPlane:
 
         return complex_pixels
 
-
-""" end class ComplexPlane: """
+""" end def class ComplexPlane: """
