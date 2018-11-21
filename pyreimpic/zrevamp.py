@@ -14,7 +14,78 @@ from PIL import Image as IP
 # from PIL import ImageColor as IC
 import colorsys
 
-# def get_magnitude_and_theta(Z):
+def mat2arr(M):
+    """ unroll a tensor to an array for sequential plotting etc. -- copy in to out """
+    if len(M.shape) > 1:
+        A = (M + 0.0).ravel()
+    else:
+        A = M + 0.0
+    return A
+
+def norm_hi_lo(X, hi=1.0, lo=-1.0):
+    X = X - X.min()
+    mxx = X.max()
+    if mxx > 0:
+        X = X / mxx
+    interval_x = hi - lo
+    if np.abs(interval_x) > 0:
+        X = X * interval_x
+    X = X + lo
+    return X
+
+def get_orientation_vector(Z_in):
+    """ Z_Orientation_Vector, magnitude_of_orientation_vector = get_orientation_vector(Z_in)
+    get the direction and magnitude of a set of complex vectors
+    """
+    Z_arr = mat2arr(Z_in)
+    numel_Z_arr = Z_arr.shape[0]
+    mag_mean = 0.0
+    z_sum = 0.0 + 0.0 * 1j
+    for z_ix in range(numel_Z_arr):
+        z_sum += Z_arr[z_ix]
+        mag_mean += np.abs(Z_arr[z_ix])
+    theta_ov = np.arctan2(z_sum.imag, z_sum.real)
+    magnitude_of_orientation_vector = mag_mean / numel_Z_arr
+    Z_Orientation_Vector = np.exp(theta_ov * 1j)
+
+    return Z_Orientation_Vector, magnitude_of_orientation_vector
+
+
+def reor_norma_first_differs(V, hi=2.0, lo=-2.0):
+    """ Z = reor_norma_first_differs(V)
+    convert the first differences in the image matrix to a normalized reoriented complex matrix
+    """
+    X, Y = first_difference(V)
+    # Stack and normalize over all:
+    n_rows = X.shape[0]
+    XY = norm_hi_lo(np.concatenate([X, Y]), hi, lo)
+    # unstack into real and imaginary of Z:
+    Z = XY[0:n_rows, :] + XY[n_rows:, :] * 1j
+
+    theta, magnit = get_direction_magnitude(Z)
+    Z_Orientation_Vector, full_magnitude = get_orientation_vector(Z)
+    Z = np.exp((theta + Z_Orientation_Vector) * 1j) * full_magnitude
+
+    return Z
+
+def get_direction_magnitude(Z):
+    """ theta, magnitude = get_direction_magnitude(Z)
+    """
+    theta = np.arctan2(np.imag(Z), np.real(Z))
+    magnitude = np.abs(Z)
+
+    return theta, magnitude
+
+def first_difference(V):
+    """ X, Y =  """
+    X = V[:, 2:] - V[:, 0:-2]
+    X = X[1:-1, :]
+
+    Y = V[0:-2, :] - V[2:, :]
+    Y = Y[:, 1:-1]
+
+    return X, Y
+
 
 def mat2graphic(Z):
     """ M, nClrs = mat2graphic(Z)

@@ -103,6 +103,14 @@ def complex_frame_dict_to_string(frame_dict, N_DEC=4):
 # plot_Z1_Z2()
 # plot_polar()
 
+def mat2arr(M):
+    """ unroll a tensor to an array for sequential plotting etc. -- copy in to out """
+    if len(M.shape) > 1:
+        A = (M + 0.0).ravel()
+    else:
+        A = M + 0.0
+    return A
+
 
 def pyplot_raw_complex(Z, title='Z complex', ylabel='Imaginary', xlabel='Real'):
     """ fig, ax = pyplot_raw_complex(Z, title, ylabel, xlabel)
@@ -131,15 +139,6 @@ def pyplot_raw_complex(Z, title='Z complex', ylabel='Imaginary', xlabel='Real'):
     return fig, ax
 
 
-def mat2arr(M):
-    """ unroll a tensor to an array for sequential plotting etc. -- copy in to out """
-    if len(M.shape) > 1:
-        A = (M + 0.0).ravel()
-    else:
-        A = M + 0.0
-    return A
-
-
 def pyplot_on_grid_complex(Z0, Z1, title='Z complex', ylabel='height', xlabel='width'):
     """ fig, ax = pyplot_grid_complex(Z0, Z1,title, ylabel, xlabel) """
     Z_start = mat2arr(Z0)
@@ -163,4 +162,5 @@ def pyplot_on_grid_complex(Z0, Z1, title='Z complex', ylabel='height', xlabel='w
     plt.title(title)
 
     return fig, ax
+
 
