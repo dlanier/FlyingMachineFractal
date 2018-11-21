@@ -64,7 +64,7 @@ def reor_norma_first_differs(V, hi=2.0, lo=-2.0):
 
     theta, magnit = get_direction_magnitude(Z)
     Z_Orientation_Vector, full_magnitude = get_orientation_vector(Z)
-    Z = np.exp((theta + Z_Orientation_Vector) * 1j) * full_magnitude
+    Z = np.exp((theta + Z_Orientation_Vector) * 1j) * magnit
 
     return Z
 
