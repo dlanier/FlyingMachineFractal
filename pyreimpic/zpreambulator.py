@@ -15,6 +15,7 @@ import numpy as np
 import zplain as zp
 
 def_par_set = {'writable_dir':'.', 'iter_max':32, 'dist_max':12}
+TIMESTAMP_RESOLUTION = 1e6
 
 class ETA_iterator:
 
@@ -257,6 +258,22 @@ def tuplerator(list_tuple, Z0, it_max, max_d):
     else:
         return max(1, ET - 1), Z_was
     
+
+class Plain_Function_Walker:
+
+    def __init__(self, ETM, ETB, temporary_dir=None):
+        self.ETM = ETM
+        self.ETB = ETB
+        if temporary_dir is None:
+            self.temporary_dir = os.path.join(os.getcwd(), get_timestamp_name('', '_tmp_dir'))
+        else:
+            self.temporary_dir = temporary_dir
+
+def get_timestamp_name(prefix='', suffix='', timestamp_resolution=None):
+    """ get a timestamped name with prefix and suffix"""
+    if timestamp_resolution is None or timestamp_resolution < 1:
+        timestamp_resolution = TIMESTAMP_RESOLUTION
+    return prefix + int_to_alpha(int(time.time() * timestamp_resolution)) + suffix
 
 def ahora_seq_name(prefi_str=None, suffi_str=None):
     """ alpha_time_stamped_name = ahora_seq_name(prefi_str, suffi_str)

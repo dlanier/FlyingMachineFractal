@@ -47,7 +47,7 @@ def get_complex_frame(CP, ZM, theta, h=1, w=1):
 
     return frame_dict
 
-class ComplexPlane:
+class ComplexPlain:
     """                         parameterized grid of complex numbers
     Args:
         CP:                     self._center_point    -- complex vector from origin to center of grid
@@ -165,4 +165,4 @@ class ComplexPlane:
 
         return complex_pixels
 
-""" end def class ComplexPlane: """
+""" end def class ComplexPlain: """

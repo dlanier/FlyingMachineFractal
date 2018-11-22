@@ -36,10 +36,22 @@ def starfish_ish_II(Z, p=None, Z0=None, ET=None):
     """
     if p is None:
         p = -0.051448293230 + 0.304348945637j
-    Z = Z**(-np.exp(Z**p)**(np.exp(Z**p)**(-np.exp(Z**p)**(np.exp(Z**p)**(\
-                    -np.exp(Z**p)**(np.exp(Z**p)**(-np.exp(Z**p))))))))
+    Z = Z**(-np.exp(Z**p)**(np.exp(Z**p)**(-np.exp(Z**p)**(np.exp(Z**p)**(-np.exp(Z**p)**(np.exp(Z**p)**(-np.exp(Z**p))))))))
     return Z
 
+def Nautuliz(Z, p=None, Z0=None, ET=None):
+    """
+    par_set['zoom'] = 1/3
+    Args:
+        Z:    a real or complex number
+        p:    a real of complex number
+    Returns:
+        Z:    the result (complex)
+    """
+    if p is None:
+        p = [2.792422080721, 1.227827869496+0.063564967216j]
+    Z = Z**(-p[0]**(-Z**(-p[1]))) - p[0]**(-Z**(p[1]))
+    return Z
 
 def decPwrAFx(Z, p=None, Z0=None, ET=None):
     """
