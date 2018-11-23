@@ -17,6 +17,48 @@ import zplain as zp
 def_par_set = {'writable_dir':'.', 'iter_max':32, 'dist_max':12}
 TIMESTAMP_RESOLUTION = 1e6
 
+def GastonJ(Z, p=None, Z0=None, ET=None):
+    """ Z = GastonJ(Z, p)
+    Args:
+        Z:    real or complex matrix, array
+        p:    real or complex parameters (matrix, array)
+    Returns:
+        Z:    the result (complex)
+    workable parameters:
+    separable = 0.7958 + 0.1893j
+    iconic = 0.7757 + 0.1234j
+    spirals = 0.7513 + 0.2551j
+    ropey = 0.81 + 0.2025j
+    """
+    if p is None:
+        p = 0.7958 + 0.1893j
+    return Z**2 - p
+
+
+_iterate_parameters = {'semi_temporary_dir':'.',
+                       'temp_dir_loc':'',
+                       'delete_temp_dir':True,
+                       'ETM':32,
+                       'ETB':12,
+                       'cpu_cores_limit':8,
+                       'equation_list_tuple':[(GastonJ, (0.81 + 0.2025j))]}
+
+from zplain import _zplain_dict, ComplexPlain
+
+
+class Plain_Function_Walker:
+
+    def __init__(self, iterator_parameters=_iterate_parameters, plain_parameters=_zplain_dict):
+        self._iterator_parameters = iterator_parameters
+        self._plain_parameters = plain_parameters
+
+        if self._iterator_parameters['temp_dir_loc'] == '':
+            self._iterator_parameters['temp_dir_loc'] = os.getcwd()
+
+    def get_function_products(self):
+        run_parameters = {**self._iterator_parameters, **self._plain_parameters}
+        ET, Z, Z0 = get_primitives(self._iterator_parameters['equation_list_tuple'], run_parameters)
+        return ET, Z, Z0
 
 def get_primitives(list_tuple, par_set):
     """ ET, Z, Z0 = get_primitives(list_tuple, par_set)

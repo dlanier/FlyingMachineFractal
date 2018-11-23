@@ -7,7 +7,7 @@ from zexhibit import get_aligned_dict_string
 
 Zomm_factor_min = 1000 * sys.float_info.min
 
-_default_dict = {'center_point': 0.0 + 0.0j,
+_zplain_dict = {'center_point': 0.0 + 0.0j,
                 'zoom_factor': 0.5,
                 'theta': 0.0,
                 'n_rows':400,
@@ -78,7 +78,7 @@ class ComplexPlain:
         , CP=0.0+0.0*1j, ZM=1.0, theta=0.0, h=5, w=5
     """
 
-    def __init__(self, plain_parameters=_default_dict):
+    def __init__(self, plain_parameters=_zplain_dict):
         self._center_point = plain_parameters['center_point']
         self._zoom_factor = max(plain_parameters['zoom_factor'], Zomm_factor_min)
         self._theta = plain_parameters['']
@@ -89,8 +89,9 @@ class ComplexPlain:
         pd = self.get_parameters_dict()
         s = get_aligned_dict_string(pd)
         print(s)
-    
-    def load_dict(self, parameters_dict):
+
+
+    def load_parameters_dict(self, parameters_dict):
         """ self.load_dict(parameters_dict) """
         if 'center_point' in parameters_dict:
             self._center_point = parameters_dict['center_point']
@@ -112,6 +113,7 @@ class ComplexPlain:
         parameters_dict['n_rows'] = self._n_rows
         parameters_dict['n_cols'] = self._n_cols    
         return parameters_dict
+
 
     def get_escape_bound(self, boundry_scale=12):
         """ escape time algorithm best infinity safe iteration distance """
