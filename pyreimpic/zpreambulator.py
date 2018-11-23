@@ -17,12 +17,6 @@ import zplain as zp
 def_par_set = {'writable_dir':'.', 'iter_max':32, 'dist_max':12}
 TIMESTAMP_RESOLUTION = 1e6
 
-class ETA_iterator:
-
-    def __init__(self, it_max=32, max_d=12):
-        self._it_max = it_max
-        self._max_d = max_d
-
 
 def get_primitives(list_tuple, par_set):
     """ ET, Z, Z0 = get_primitives(list_tuple, par_set)
@@ -30,7 +24,7 @@ def get_primitives(list_tuple, par_set):
     Args:
         list_tuple:
         par_set:            parameters dictionary with keys: all needed for complex frame,
-                            'dir_path', 'it_max', 'max_d'
+                            'temp_dir_loc', 'ETM', 'ETB'
         delete_temp_dir:    True or False ? delete the temporary directory after assembling Z
     Returns:
         ET:                 Escape Time matrix (may be float - fractional escape times possible)
@@ -42,7 +36,7 @@ def get_primitives(list_tuple, par_set):
     else:
         delete_temp_dir = True
     
-    par_set['tmp_dir'] = get_tmp_dir(par_set['dir_path'], 'tmp')
+    par_set['tmp_dir'] = get_tmp_dir(par_set['temp_dir_loc'], 'tmp')
     complex_frame, par_set = zp.get_frame_from_dict(par_set)
     n_cores = mp.cpu_count()
     range_enumeration = np.int_(range(0, par_set['n_rows']))
@@ -102,7 +96,7 @@ def write_row(complex_frame, list_tuple, par_set, row_number):
         complex_frame:  z_plane complex frame dictionary of points
         list_tuple:     list of tuples data struct:   [(function_handle, ([par1, par2,... parN]) )]
         par_set:        parameters dictionary with keys:
-                        'tmp_dir', 'it_max', 'max_d'
+                        'tmp_dir', 'ETM', 'ETB'
         row_number:     integer number of the row to process
     """
     if 'eq_order' in par_set:
@@ -120,27 +114,27 @@ def write_row(complex_frame, list_tuple, par_set, row_number):
                                   complex_frame['bottom_right'], par_set['n_rows'])
         row_array = np.linspace(left_style[row_number], right_style[row_number], par_set['n_cols'])
 
-    it_max = par_set['it_max']
-    max_d = par_set['max_d']
+    ETM = par_set['ETM']
+    ETB = par_set['ETB']
     Z_arr = np.zeros((3,row_array.size), complex)
 
     if eq_order == 0:
         col = 0
         for Z0 in row_array:
             Z_arr[0, col] = Z0
-            Z_arr[1, col], Z_arr[2, col] = tuplerator(list_tuple, Z0, it_max, max_d)
+            Z_arr[1, col], Z_arr[2, col] = tuplerator(list_tuple, Z0, ETM, ETB)
             col += 1
     elif eq_order == 2:
         col = 0
         for Z0 in row_array:
             Z_arr[0, col] = Z0
-            Z_arr[1, col], Z_arr[2, col] = tuplerator_2(list_tuple, Z0, it_max, max_d)
+            Z_arr[1, col], Z_arr[2, col] = tuplerator_2(list_tuple, Z0, ETM, ETB)
             col += 1
     elif eq_order == -1:
         col = 0
         for Z0 in row_array:
             Z_arr[0, col] = Z0
-            Z_arr[1, col], Z_arr[2, col] = tuplerator_3(list_tuple, Z0, it_max, max_d, par_set)
+            Z_arr[1, col], Z_arr[2, col] = tuplerator_3(list_tuple, Z0, ETM, ETB, par_set)
             col += 1
 
     Z_arr[1, :] = Z_arr[1, :] + complex(0.0, float(row_number)) # row number as imaginary part
@@ -149,8 +143,8 @@ def write_row(complex_frame, list_tuple, par_set, row_number):
         Z_arr.dump(file_handle)
 
         
-def tuplerator_3(list_tuple, Z0, it_max, max_d, par_set):
-    """ ET, Z = tuplerator(list_tuple, Z0, it_max, max_d)
+def tuplerator_3(list_tuple, Z0, ETM, ETB, par_set):
+    """ ET, Z = tuplerator(list_tuple, Z0, ETM, ETB)
         function iterator for two tuple list (with at least one tuple)
         list_tuple = [(function_1, (p1, p2,... , pn)), (function_2, (p1, p2,... , pn))]
         
@@ -158,8 +152,8 @@ def tuplerator_3(list_tuple, Z0, it_max, max_d, par_set):
         list_tuple: [ ( function_handle_01,(fh_01_p1, fh_01_p2,...) ),... (fh_n,(p1, p2,...)) ]
                     list of tuples: function handle (not lambda fcn) & internal parameters
         Z0:         complex vector - starting point
-        it_max:     maximum number of iterations
-        max_d:      quit iterating and return distance
+        ETM:     maximum number of iterations
+        ETB:      quit iterating and return distance
         
     Returns:
         ET:         number of iterations to finishing point
@@ -175,7 +169,7 @@ def tuplerator_3(list_tuple, Z0, it_max, max_d, par_set):
     d = 0
     ET += 1
     Z_was = Z
-    while (ET <= it_max) & (np.isfinite(d)) & (d < max_d):
+    while (ET <= ETM) & (np.isfinite(d)) & (d < ETB):
         ET += 1
         Z_was = Z
         try:
@@ -185,14 +179,14 @@ def tuplerator_3(list_tuple, Z0, it_max, max_d, par_set):
             d = np.abs(Z - Z0)
         except:
             return max(1, ET - 1), Z_was
-    # if (ET >= it_max) & (np.isfinite(d)) & (d < max_d):    
+    # if (ET >= ETM) & (np.isfinite(d)) & (d < ETB):
     if (np.isfinite(d)):
         return ET, Z
     else:
         return max(1, ET - 1), Z_was
 
 
-def tuplerator_2(list_tuple, Z0, it_max, max_d):
+def tuplerator_2(list_tuple, Z0, ETM, ETB):
     ET = 0
     Z = Z0
     Zm1 = Z0
@@ -200,7 +194,7 @@ def tuplerator_2(list_tuple, Z0, it_max, max_d):
     d = 0
     ET += 1
     Z_was = Z
-    while (ET <= it_max) & (np.isfinite(d)) & (d < max_d):
+    while (ET <= ETM) & (np.isfinite(d)) & (d < ETB):
         Z_was = Z
         try:
             for fcn_hndl, P in list_tuple:
@@ -210,15 +204,15 @@ def tuplerator_2(list_tuple, Z0, it_max, max_d):
         except:
             return max(1, ET - 1), Z_was
         ET += 1
-    # if (ET >= it_max) & (np.isfinite(d)) & (d < max_d):
+    # if (ET >= ETM) & (np.isfinite(d)) & (d < ETB):
     if (np.isfinite(d)):
         return ET, Z
     else:
         return max(1, ET - 1), Z_was
 
 
-def tuplerator(list_tuple, Z0, it_max, max_d):
-    """ ET, Z = tuplerator(list_tuple, Z0, it_max, max_d)
+def tuplerator(list_tuple, Z0, ETM, ETB):
+    """ ET, Z = tuplerator(list_tuple, Z0, ETM, ETB)
         function iterator for two tuple list (with at least one tuple)
         list_tuple = [(function_1, (p1, p2,... , pn)), (function_2, (p1, p2,... , pn))]
         
@@ -226,8 +220,8 @@ def tuplerator(list_tuple, Z0, it_max, max_d):
         list_tuple: [ ( function_handle_01,(fh_01_p1, fh_01_p2,...) ),... (fh_n,(p1, p2,...)) ]
                     list of tuples: function handle (not lambda fcn) & internal parameters
         Z0:         complex vector - starting point
-        it_max:     maximum number of iterations
-        max_d:      quit iterating and return distance
+        ETM:     maximum number of iterations
+        ETB:      quit iterating and return distance
         
     Returns:
         ET:         number of iterations to finishing point
@@ -243,7 +237,7 @@ def tuplerator(list_tuple, Z0, it_max, max_d):
     d = 0
     ET += 1
     Z_was = Z
-    while (ET <= it_max) & (np.isfinite(d)) & (d < max_d):
+    while (ET <= ETM) & (np.isfinite(d)) & (d < ETB):
         ET += 1
         Z_was = Z
         try:
@@ -252,22 +246,13 @@ def tuplerator(list_tuple, Z0, it_max, max_d):
             d = np.abs(Z - Z0)
         except:
             return max(1, ET - 1), Z_was
-    # if (ET >= it_max) & (np.isfinite(d)) & (d < max_d):    
+    # if (ET >= ETM) & (np.isfinite(d)) & (d < ETB):
     if (np.isfinite(d)):
         return ET, Z
     else:
         return max(1, ET - 1), Z_was
     
 
-class Plain_Function_Walker:
-
-    def __init__(self, ETM, ETB, temporary_dir=None):
-        self.ETM = ETM
-        self.ETB = ETB
-        if temporary_dir is None:
-            self.temporary_dir = os.path.join(os.getcwd(), get_timestamp_name('', '_tmp_dir'))
-        else:
-            self.temporary_dir = temporary_dir
 
 def get_timestamp_name(prefix='', suffix='', timestamp_resolution=None):
     """ get a timestamped name with prefix and suffix"""
@@ -336,20 +321,20 @@ def seq_time_id_string(time_units=1e6):
     return int_to_alpha(int(time.time() * np.maximum(np.minimum(time_units, 1e9), 1)))
 
 
-def get_tmp_dir(dir_path, dir_name, timestamp=None):
-    """ new_dir_name = get_tmp_dir(dir_path, dir_name, timestamp)
+def get_tmp_dir(temp_dir_loc, dir_name, timestamp=None):
+    """ new_dir_name = get_tmp_dir(temp_dir_loc, dir_name, timestamp)
         create a "dir_name" with time stamp directory
 
     Args:
-        dir_path:       an existing directory such as the run directory.
-        dir_name:       new directory name to add to dir_path directory.
+        temp_dir_loc:       an existing directory such as the run directory.
+        dir_name:       new directory name to add to temp_dir_loc directory.
         timestamp:      optional - if not input a microsecond stamp will be added.
     Returns:
         new_dir_name:   name of directory just created
     """
     if timestamp is None:
         timestamp = seq_time_id_string()
-    new_dir_name = os.path.join(dir_path, dir_name + timestamp)
+    new_dir_name = os.path.join(temp_dir_loc, dir_name + timestamp)
     os.mkdir(new_dir_name)
 
     return new_dir_name

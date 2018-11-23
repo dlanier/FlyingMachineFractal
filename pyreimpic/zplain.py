@@ -1,9 +1,17 @@
 """
 complex plane functions and class for getting pixels in three different measuring systems
 """
+import sys
 import numpy as np
 from zexhibit import get_aligned_dict_string
 
+Zomm_factor_min = 1000 * sys.float_info.min
+
+_default_dict = {'center_point': 0.0 + 0.0j,
+                'zoom_factor': 0.5,
+                'theta': 0.0,
+                'n_rows':400,
+                'n_cols':400}
 
 def get_frame_from_dict(def_dict):
     """ complex_frame, def_dict = get_frame_from_dict(def_dict)
@@ -17,7 +25,7 @@ def get_frame_from_dict(def_dict):
     """
     complex_frame = get_complex_frame(
         def_dict['center_point'],
-        def_dict['zoom'],
+        def_dict['zoom_factor'],
         def_dict['theta'],
         def_dict['n_rows'],
         def_dict['n_cols'])
@@ -67,14 +75,15 @@ class ComplexPlain:
         get_rails:              top and bottom arrays of complex vectors
         get_styles:             left and right arrays of complex vectors
         load_dict:              re-initialize the object with new set of definition parameters (Args)
+        , CP=0.0+0.0*1j, ZM=1.0, theta=0.0, h=5, w=5
     """
 
-    def __init__(self, CP=0.0+0.0*1j, ZM=1.0, theta=0.0, h=5, w=5):
-        self._center_point = CP
-        self._zoom_factor = max(ZM, 1e-15)
-        self._theta = theta
-        self._n_rows = max(round(h), 1)
-        self._n_cols = max(round(w), 1)
+    def __init__(self, plain_parameters=_default_dict):
+        self._center_point = plain_parameters['center_point']
+        self._zoom_factor = max(plain_parameters['zoom_factor'], Zomm_factor_min)
+        self._theta = plain_parameters['']
+        self._n_rows = max(round(plain_parameters['n_rows']), 1)
+        self._n_cols = max(round(plain_parameters['n_cols']), 1)
 
     def display_self(self):
         pd = self.get_parameters_dict()
