@@ -178,20 +178,38 @@ class Function_Finder:
     def __init__(self, images_df_name, functions_df_name):
         self.images_df = pd.read_csv(images_df_name, sep='\t')
         self.functions_df = pd.read_csv(functions_df_name, sep='\t')
+        self.images_df_name = images_df_name
+        self.functions_df_name = functions_df_name
 
     def get_image_data(self, image_name):
-        return self.images_df[self.images_df['image_filename'] == image_name].iloc[0].to_dict()
+        """ get the raw data for the row with image_name"""
+        data_dict = {}
+        if image_name in self.images_df['image_filename'].values:
+            data_dict = self.images_df[self.images_df['image_filename'] == image_name].iloc[0].to_dict()
+        return data_dict
 
     def get_function_data(self, function_name):
-        return self.functions_df[self.functions_df['equation_name'] == function_name].iloc[0].to_dict()
+        data_dict = {}
+        if function_name in self.functions_df['equation_name'].values:
+            data_dict = self.functions_df[self.functions_df['equation_name'] == function_name].iloc[0].to_dict()
+        return data_dict
 
     def get_image_function_data(self, image_name):
+        """ get the image and function dictionary data for the input image file name """
         image_dict = self.get_image_data(image_name)
-        function_dict = self.get_function_data(image_dict['function_name'][:-2])
+        function_dict = {}
+        if len(image_dict) > 0:
+            function_dict = self.get_function_data(image_dict['function_name'][:-2])
         return image_dict, function_dict
 
     def display_function_for_image(self, image_name):
+        """ display the equation and parameters associated with the image name """
         image_dict, function_dict = self.get_image_function_data(image_name)
+        if len(function_dict) < 1:
+            print('image name not found\n', image_name)
+            print('%10i :image name data\n%10i :equation name data' % (len(image_dict), len(function_dict)))
+            return
+
         print('Matlab for', '%30s \tfrom \t%s\n' % (image_name, image_dict['function_name']))
         print('parameters')
         for s in toady_string_to_list(image_dict['parameters']):
@@ -213,4 +231,3 @@ class Function_Finder:
             elif not s[0:3] == 'end':
                 print(indent_str, ' ' * 4, s.replace('\\n', ''))
         print('')
-
