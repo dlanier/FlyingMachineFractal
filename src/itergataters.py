@@ -16,26 +16,44 @@ import z_plane as zp
 
 
 def get_primitives(list_tuple, par_set):
-    """ ET, Z, Z0 = get_primitives(list_tuple, par_set)
+    """     ET, Z, Z0 = get_primitives(list_tuple, par_set)
+
+    Wrapper Function for all the parallel iteration functions where:
+        write_row() - iterate a functional iterator over a row, write row result to temporary disk.
+            tuplerator()    :iterates through the list of functions with their parameters.
+            tuplerator2()   :++ passes Z_n-1 & Z_n-2 (second order Iterated Function Systerms).
+            tuplerator3()   :passes expanded initial conditions and additional full parameters dict.
+
     Args:
-        list_tuple:
-        par_set:            parameters dictionary with keys: all needed for complex frame,
-                            'dir_path', 'it_max', 'max_d'
-        delete_temp_dir:    True or False ? delete the temporary directory after assembling Z
+        list_tuple:         [(tuple), (tuple),...], where tuple = (function_handle, parameters)
+        par_set:            parameters dictionary with keys:
+                                dir_path        :temporary directory (for parallel algorithm usage)
+                                n_rows          :number of rows (grid of pixels over complex points)
+                                n_cols          :number of columns
+                                center_point    :center of figure on the complex plane
+                                theta           :rotation of complex plane in the figure
+                                zoom            :scaling of the complex plane in the figure
+                                it_max
+                                max_d
+
+        delete_temp_dir:    (opt., default=true) delete temporary directory when finished
+
     Returns:
         ET:                 Escape Time matrix (may be float - fractional escape times possible)
         Z:                  Complex matrix after iteration
         Z0:                 Complex plane matrix before iteration
-    """        
+    """
+    # check & instantiate the preliminary run parameters
     if 'delete_temp_dir' in par_set:
         delete_temp_dir = par_set['delete_temp_dir']
     else:
         delete_temp_dir = True
-    
     par_set['tmp_dir'] = get_tmp_dir(par_set['dir_path'], 'tmp')
     complex_frame, par_set = zp.get_frame_from_dict(par_set)
-    n_cores = mp.cpu_count()
     range_enumeration = np.int_(range(0, par_set['n_rows']))
+
+    # allocate parallel pool, call multiprocessing.starmap() to write temporary row files
+    n_cores = mp.cpu_count()
     core_pool = mp.Pool(processes=n_cores)
     core_pool.starmap(write_row, 
                      zip(itertools.repeat(complex_frame),
@@ -45,8 +63,8 @@ def get_primitives(list_tuple, par_set):
     core_pool.close()
     core_pool.join()
 
+    # collect, assemble and cleanup the temporary row files
     Z0, Z, ET = assemble_rows(par_set)
-    
     if delete_temp_dir: remove_tmp_dir(par_set['tmp_dir'])
 
     return ET, Z, Z0
@@ -54,7 +72,7 @@ def get_primitives(list_tuple, par_set):
 
 def assemble_rows(par_set):
     """ Z0, Z, ET = assemble_rows(par_set)
-        read the temporary files into the output matrices Z0, Z, and ET
+    read the temporary files into the output matrices Z0, Z, and ET
     Args:
         par_set:            parameters dictionary with keys:
                             'n_rows', 'n_cols', 'tmp_dir'
@@ -162,6 +180,7 @@ def tuplerator_3(list_tuple, Z0, it_max, max_d, par_set):
     """
     ET = 0
     Z = Z0
+    Z_was = Z
     d = 0
     while (ET <= it_max) & (np.isfinite(d)) & (d < max_d):
         ET += 1
@@ -173,15 +192,17 @@ def tuplerator_3(list_tuple, Z0, it_max, max_d, par_set):
             d = np.abs(Z - Z0)
         except:
             return max(1, ET - 1), Z_was
-    # if (ET >= it_max) & (np.isfinite(d)) & (d < max_d):    
+
     if (np.isfinite(d)):
         return ET, Z
     else:
         return max(1, ET - 1), Z_was
         
 def tuplerator_2(list_tuple, Z0, it_max, max_d):
+    """ see tuplerator comments """
     ET = 0
     Z = Z0
+    Z_was = Z
     Zm1 = Z0
     Zm2 = Z0
     d = 0
@@ -195,7 +216,7 @@ def tuplerator_2(list_tuple, Z0, it_max, max_d):
         except:
             return max(1, ET - 1), Z_was
         ET += 1
-    # if (ET >= it_max) & (np.isfinite(d)) & (d < max_d):
+
     if (np.isfinite(d)):
         return ET, Z
     else:
@@ -224,6 +245,7 @@ def tuplerator(list_tuple, Z0, it_max, max_d):
     """
     ET = 0
     Z = Z0
+    Z_was = Z
     d = 0
     while (ET <= it_max) & (np.isfinite(d)) & (d < max_d):
         ET += 1
@@ -234,7 +256,7 @@ def tuplerator(list_tuple, Z0, it_max, max_d):
             d = np.abs(Z - Z0)
         except:
             return max(1, ET - 1), Z_was
-    # if (ET >= it_max) & (np.isfinite(d)) & (d < max_d):    
+
     if (np.isfinite(d)):
         return ET, Z
     else:
