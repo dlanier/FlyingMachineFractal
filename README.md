@@ -1,6 +1,6 @@
-# Behaviorally Unexpected Functional Algorithms BUFA
-A project to save, share and find functions that produce artistic graphical output using the Escape Time Algorithm.
+# Find functions that produce artistic graphical output.
+
 ****
-# Motovation - beautiful graphic figures at any scale arise from unpredicted functions - find better ways to find them.
+## Detailed graphics at any scale capitalizing on experimental mathematics.
 [GitHub .io Exhibit](https://dlanier.github.io/FlyingMachineFractal/)
 ****
