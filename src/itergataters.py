@@ -4,6 +4,9 @@ itergators.py
 @author: del
 lanier4@illinois.edu
 mradmstr514226508@gmail.com
+
+
+
 """
 import os
 import time
@@ -119,8 +122,8 @@ def write_row(complex_frame, list_tuple, par_set, row_number):
         eq_order = 0
 
     if 'RANDOM_PLANE' in par_set and par_set['RANDOM_PLANE'] == True:
-        SF = np.abs(complex_frame['upper_left'] - complex_frame['bottom_right'])
-        row_array = (np.random.randn(par_set['n_cols']) + np.random.randn(par_set['n_cols']) * 1j) * SF
+        # SF = np.abs(complex_frame['upper_left'] - complex_frame['bottom_right'])
+        row_array = (np.random.randn(par_set['n_cols']) + np.random.randn(par_set['n_cols']) * 1j) # * SF
     else:
         left_style = np.linspace(complex_frame['upper_left'],
                                  complex_frame['bottom_left'], par_set['n_rows'])
@@ -363,10 +366,3 @@ def remove_tmp_dir(dir_name):
         pass
 
     return
-
-
-class ETA_iterator:
-
-    def __init__(self, it_max=32, max_d=12):
-        self._it_max = it_max
-        self._max_d = max_d
