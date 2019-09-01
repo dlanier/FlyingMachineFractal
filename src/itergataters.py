@@ -94,8 +94,8 @@ def assemble_rows(par_set):
     
     dir_listing = os.listdir(tmp_dir)
     for f in dir_listing:
-        fnm = os.path.join(tmp_dir, f)
-        three_sum = np.load(fnm)
+        fnm = os.path.join(tmp_dir, f)                     # should limit to .npy files
+        three_sum = np.load(fnm, allow_pickle=True)
         row_number = int(np.imag(three_sum[1, 0]))
         Z0[row_number, :] = three_sum[0, :]
         ET[row_number, :] = np.real(three_sum[1, :])
@@ -155,9 +155,11 @@ def write_row(complex_frame, list_tuple, par_set, row_number):
             col += 1
 
     Z_arr[1, :] = Z_arr[1, :] + complex(0.0, float(row_number)) # row number as imaginary part
-    file_name = os.path.join(par_set['tmp_dir'], ahora_seq_name('row_%d_'%(row_number), '.txt'))
+    # file_name = os.path.join(par_set['tmp_dir'], ahora_seq_name('row_%d_'%(row_number), '.txt'))
+    file_name = os.path.join(par_set['tmp_dir'], ahora_seq_name('row_%d_' % (row_number), '.npy'))
     with open(file_name, 'wb') as file_handle:
-        Z_arr.dump(file_handle)
+        # Z_arr.dump(file_handle, allow_pickle=True)
+        np.save(file_handle, Z_arr, allow_pickle=True)
 
         
 def tuplerator_3(list_tuple, Z0, it_max, max_d, par_set):
