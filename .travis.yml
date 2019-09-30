@@ -1,0 +1,5 @@
+language: python
+dist: xenial
+
+script: ./test/unit_test/plane_test.py
+
