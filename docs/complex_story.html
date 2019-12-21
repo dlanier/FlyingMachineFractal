@@ -13077,6 +13077,40 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Ratio-of-ratios-on-the-complex-plane.">Ratio of ratios on the complex plane.<a class="anchor-link" href="#Ratio-of-ratios-on-the-complex-plane.">&#182;</a></h1><p><a href="https://en.wikipedia.org/wiki/Complex_number">Complex numbers</a>, solved a mathematical gambler's (<a href="https://en.wikipedia.org/wiki/Gerolamo_Cardano">Cardano</a>) problem of how to recursively calculate odds while allowing negative numbers. <br>
+For centuries, mathemiticians denied (cursed really) imaginary numbers. <br>
+<a href="https://en.wikipedia.org/wiki/Leonhard_Euler">Leonhard Euler</a> put the matter to rest with <a href="https://en.wikipedia.org/wiki/Euler%27s_formula">Euler's Formula</a> and the profoundly magical identity relating the base of the natural log, pi and the imaginary root of negative one to unity and nothing. <br>
+<br>
+$$
+\ e^{i\pi} - 1 = 0 \\
+$$
+<br>
+On the complex plane the real and imaginary axis are not perfectly orthoganal in the context of polynomials. <br>
+Complec vector addition moves in two directions by two amounts, <br>
+mulitiplacation is a rotation with contraction or expansion. <br>
+These qualities make repeated iteration of difference equations much more interesting. <br>
+<br>
+$$
+\ Z_{n+1} = f'(Z_{n}) \\
+$$
+<br>
+Repeated multiplacation of a real number has only three possible futures: <br>
+<br>
+$$
+\ x_{n+1} = x_{n}^{2} \\
+\ \\
+\ x_{0} = 1 \\
+\ x_{n} == 1 (forever) \\
+\ \\
+\ x_{0} &gt; 1 \\
+\ x \Rightarrow \infty   \\
+\ \\
+\ x_{0} &lt; 1 \\
+\ x \Rightarrow 0 \\
+$$
+<br>
+Not so simple if the number is complex. <br></p>
+<hr>
 <h3 id="Difference-Equations-as-Graphic-Art-and-Complex-Analysis.">Difference Equations as Graphic Art and Complex Analysis.<a class="anchor-link" href="#Difference-Equations-as-Graphic-Art-and-Complex-Analysis.">&#182;</a></h3><p><a href="https://en.wikipedia.org/wiki/Pierre_Fatou">Pierre Fatau</a> and <a href="https://en.wikipedia.org/wiki/Gaston_Julia">Gaston Julia</a> found that very strange things happen to polynomials in the region of the complex plane around the unit circle. <br></p>
 <p>The real-world usefullness of discrete differences are easy to understand. Using those differences algebraically and numerically points to where some system of differences may lead. Repeated calculation with a polynomial may lead to finding the root of a negative number. Therefore all who would project into the future with a system of iterated differences should consider complex vectors (numbers) useful.</p>
 
@@ -13167,6 +13201,274 @@ vector with magnitude: 1.414214, rotation: 0.785398 radians
 </div>
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># real numbers can only flip, </span>
+<span class="c1"># and they flip out to infinity or zero unless their absolute value is one</span>
+<span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;x^</span><span class="si">%i</span><span class="s1"> = </span><span class="si">%i</span><span class="s1">, &#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="n">k</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>x^0 = 1, x^1 = -1, x^2 = 1, x^3 = -1, x^4 = 1, x^5 = -1, x^6 = 1, x^7 = -1, x^8 = 1, x^9 = -1
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[51]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># complex numbers </span>
+<span class="c1"># flip out cyclicly if they are on the unit circle</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">magnitude z_0 =&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">z</span><span class="p">))</span>
+<span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">z_n</span> <span class="o">=</span> <span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="o">**</span><span class="n">k</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;z^</span><span class="si">%i</span><span class="s1"> = </span><span class="si">%0.2f</span><span class="s1"> </span><span class="si">%0.2f</span><span class="s1">i , &#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">z_n</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">z_n</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+
+<span class="c1"># or they flip out towards zero if they start inside the unit circle</span>
+<span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.9</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">magnitude z_0 =&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">z</span><span class="p">))</span>
+<span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">z_n</span> <span class="o">=</span> <span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="o">**</span><span class="n">k</span>
+    <span class="k">if</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">k</span> <span class="o">%</span> <span class="mi">4</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="k">if</span> <span class="n">z_n</span><span class="o">.</span><span class="n">imag</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;z^</span><span class="si">%i</span><span class="s1"> = </span><span class="si">%0.3f</span><span class="s1">+</span><span class="si">%0.3f</span><span class="s1">i, &#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">z_n</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">z_n</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;z^</span><span class="si">%i</span><span class="s1"> = </span><span class="si">%0.3f%0.3f</span><span class="s1">i, &#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">z_n</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">z_n</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+
+<span class="c1"># and they flip out towards infinity if they start outside the unit circle</span>
+<span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.1</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">magnitude z_0 =&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">z</span><span class="p">))</span>
+<span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">z_n</span> <span class="o">=</span> <span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="o">**</span><span class="n">k</span>
+    <span class="k">if</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">k</span> <span class="o">%</span> <span class="mi">4</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="k">if</span> <span class="n">z_n</span><span class="o">.</span><span class="n">imag</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;z^</span><span class="si">%i</span><span class="s1"> = </span><span class="si">%0.3f</span><span class="s1">+</span><span class="si">%0.3f</span><span class="s1">i, &#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">z_n</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">z_n</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;z^</span><span class="si">%i</span><span class="s1"> = </span><span class="si">%0.3f%0.3f</span><span class="s1">i, &#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">z_n</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">z_n</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+magnitude z_0 = 1.0
+z^0 = 1.00 0.00i , z^1 = 0.71 0.71i , z^2 = 0.00 1.00i , z^3 = -0.71 0.71i , z^4 = -1.00 0.00i , z^5 = -0.71 -0.71i , z^6 = -0.00 -1.00i , z^7 = 0.71 -0.71i , z^8 = 1.00 -0.00i , z^9 = 0.71 0.71i 
+
+magnitude z_0 = 0.9
+z^0 = 1.000+0.000i, z^1 = 0.636+0.636i, z^2 = 0.000+0.810i, z^3 = -0.515+0.515i, 
+z^4 = -0.656+0.000i, z^5 = -0.418-0.418i, z^6 = -0.000-0.531i, z^7 = 0.338-0.338i, 
+z^8 = 0.430-0.000i, z^9 = 0.274+0.274i, z^10 = 0.000+0.349i, z^11 = -0.222+0.222i, 
+z^12 = -0.282+0.000i, z^13 = -0.180-0.180i, z^14 = -0.000-0.229i, z^15 = 0.146-0.146i, 
+z^16 = 0.185-0.000i, z^17 = 0.118+0.118i, z^18 = 0.000+0.150i, z^19 = -0.096+0.096i, 
+z^20 = -0.122+0.000i, z^21 = -0.077-0.077i, z^22 = -0.000-0.098i, z^23 = 0.063-0.063i, 
+z^24 = 0.080-0.000i, z^25 = 0.051+0.051i, z^26 = 0.000+0.065i, z^27 = -0.041+0.041i, 
+z^28 = -0.052+0.000i, z^29 = -0.033-0.033i, z^30 = -0.000-0.042i, z^31 = 0.027-0.027i, 
+z^32 = 0.034-0.000i, z^33 = 0.022+0.022i, z^34 = 0.000+0.028i, z^35 = -0.018+0.018i, 
+z^36 = -0.023+0.000i, z^37 = -0.014-0.014i, z^38 = -0.000-0.018i, z^39 = 0.012-0.012i, 
+z^40 = 0.015-0.000i, z^41 = 0.009+0.009i, z^42 = 0.000+0.012i, z^43 = -0.008+0.008i, 
+z^44 = -0.010+0.000i, z^45 = -0.006-0.006i, z^46 = -0.000-0.008i, z^47 = 0.005-0.005i, 
+z^48 = 0.006-0.000i, z^49 = 0.004+0.004i, z^50 = 0.000+0.005i, z^51 = -0.003+0.003i, 
+z^52 = -0.004+0.000i, z^53 = -0.003-0.003i, z^54 = -0.000-0.003i, z^55 = 0.002-0.002i, 
+z^56 = 0.003-0.000i, z^57 = 0.002+0.002i, z^58 = 0.000+0.002i, z^59 = -0.001+0.001i, 
+z^60 = -0.002+0.000i, z^61 = -0.001-0.001i, z^62 = -0.000-0.001i, z^63 = 0.001-0.001i, 
+z^64 = 0.001-0.000i, z^65 = 0.001+0.001i, z^66 = 0.000+0.001i, z^67 = -0.001+0.001i, 
+z^68 = -0.001+0.000i, z^69 = -0.000-0.000i, z^70 = -0.000-0.001i, z^71 = 0.000-0.000i, 
+z^72 = 0.001-0.000i, z^73 = 0.000+0.000i, z^74 = 0.000+0.000i, z^75 = -0.000+0.000i, 
+z^76 = -0.000+0.000i, z^77 = -0.000-0.000i, z^78 = -0.000-0.000i, z^79 = 0.000-0.000i, 
+z^80 = 0.000-0.000i, z^81 = 0.000+0.000i, z^82 = 0.000+0.000i, z^83 = -0.000+0.000i, 
+z^84 = -0.000+0.000i, z^85 = -0.000-0.000i, z^86 = -0.000-0.000i, z^87 = 0.000-0.000i, 
+z^88 = 0.000-0.000i, z^89 = 0.000+0.000i, z^90 = 0.000+0.000i, z^91 = -0.000+0.000i, 
+z^92 = -0.000+0.000i, z^93 = -0.000-0.000i, z^94 = -0.000-0.000i, z^95 = 0.000-0.000i, 
+z^96 = 0.000-0.000i, z^97 = 0.000+0.000i, z^98 = 0.000+0.000i, z^99 = -0.000+0.000i
+
+magnitude z_0 = 1.1
+z^0 = 1.000+0.000i, z^1 = 0.778+0.778i, z^2 = 0.000+1.210i, z^3 = -0.941+0.941i, 
+z^4 = -1.464+0.000i, z^5 = -1.139-1.139i, z^6 = -0.000-1.772i, z^7 = 1.378-1.378i, 
+z^8 = 2.144-0.000i, z^9 = 1.667+1.667i, z^10 = 0.000+2.594i, z^11 = -2.017+2.017i, 
+z^12 = -3.138+0.000i, z^13 = -2.441-2.441i, z^14 = -0.000-3.797i, z^15 = 2.954-2.954i, 
+z^16 = 4.595-0.000i, z^17 = 3.574+3.574i, z^18 = 0.000+5.560i, z^19 = -4.325+4.325i, 
+z^20 = -6.727+0.000i, z^21 = -5.233-5.233i, z^22 = -0.000-8.140i, z^23 = 6.332-6.332i, 
+z^24 = 9.850-0.000i, z^25 = 7.661+7.661i, z^26 = 0.000+11.918i, z^27 = -9.270+9.270i, 
+z^28 = -14.421+0.000i, z^29 = -11.217-11.217i, z^30 = -0.000-17.449i, z^31 = 13.572-13.572i, 
+z^32 = 21.114-0.000i, z^33 = 16.423+16.423i, z^34 = 0.000+25.548i, z^35 = -19.871+19.871i, 
+z^36 = -30.913+0.000i, z^37 = -24.044-24.044i, z^38 = -0.000-37.404i, z^39 = 29.094-29.094i, 
+z^40 = 45.259-0.000i, z^41 = 35.203+35.203i, z^42 = 0.000+54.764i, z^43 = -42.596+42.596i, 
+z^44 = -66.264+0.000i, z^45 = -51.541-51.541i, z^46 = -0.000-80.180i, z^47 = 62.365-62.365i, 
+z^48 = 97.017-0.000i, z^49 = 75.462+75.462i, z^50 = 0.000+117.391i, z^51 = -91.309+91.309i, 
+z^52 = -142.043+0.000i, z^53 = -110.483-110.483i, z^54 = -0.000-171.872i, z^55 = 133.685-133.685i, 
+z^56 = 207.965-0.000i, z^57 = 161.759+161.759i, z^58 = 0.000+251.638i, z^59 = -195.728+195.728i, 
+z^60 = -304.482+0.000i, z^61 = -236.831-236.831i, z^62 = -0.000-368.423i, z^63 = 286.566-286.566i, 
+z^64 = 445.792-0.000i, z^65 = 346.744+346.744i, z^66 = 0.000+539.408i, z^67 = -419.561+419.561i, 
+z^68 = -652.683+0.000i, z^69 = -507.669-507.669i, z^70 = -0.000-789.747i, z^71 = 614.279-614.279i, 
+z^72 = 955.594-0.000i, z^73 = 743.278+743.278i, z^74 = 0.000+1156.269i, z^75 = -899.366+899.366i, 
+z^76 = -1399.085+0.000i, z^77 = -1088.233-1088.233i, z^78 = -0.000-1692.893i, z^79 = 1316.762-1316.762i, 
+z^80 = 2048.400-0.000i, z^81 = 1593.281+1593.281i, z^82 = 0.000+2478.564i, z^83 = -1927.871+1927.871i, 
+z^84 = -2999.063+0.000i, z^85 = -2332.723-2332.723i, z^86 = -0.000-3628.866i, z^87 = 2822.595-2822.595i, 
+z^88 = 4390.928-0.000i, z^89 = 3415.340+3415.340i, z^90 = 0.000+5313.023i, z^91 = -4132.562+4132.562i, 
+z^92 = -6428.757+0.000i, z^93 = -5000.400-5000.400i, z^94 = -0.000-7778.796i, z^95 = 6050.484-6050.484i, 
+z^96 = 9412.344-0.000i, z^97 = 7321.085+7321.085i, z^98 = 0.000+11388.936i, z^99 = -8858.513+8858.513i
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[42]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">24</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">k</span> <span class="o">%</span> <span class="mi">12</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
 </div>
 </div>
 
