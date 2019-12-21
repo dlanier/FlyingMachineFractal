@@ -13210,15 +13210,30 @@ vector with magnitude: 1.414214, rotation: 0.785398 radians
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[59]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># real numbers can only flip, </span>
 <span class="c1"># and they flip out to infinity or zero unless their absolute value is one</span>
 <span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">magnitude x_0 =&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
     <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;x^</span><span class="si">%i</span><span class="s1"> = </span><span class="si">%i</span><span class="s1">, &#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="n">k</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.2</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">magnitude x_0 =&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;x^</span><span class="si">%0.1f</span><span class="s1"> = </span><span class="si">%0.1f</span><span class="s1">, &#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="n">k</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.8</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">magnitude x_0 =&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;x^</span><span class="si">%0.1f</span><span class="s1"> = </span><span class="si">%0.1f</span><span class="s1">, &#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="n">k</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
 </pre></div>
 
@@ -13236,7 +13251,15 @@ vector with magnitude: 1.414214, rotation: 0.785398 radians
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>x^0 = 1, x^1 = -1, x^2 = 1, x^3 = -1, x^4 = 1, x^5 = -1, x^6 = 1, x^7 = -1, x^8 = 1, x^9 = -1
+<pre>
+magnitude x_0 = 1
+x^0 = 1, x^1 = -1, x^2 = 1, x^3 = -1, x^4 = 1, x^5 = -1, x^6 = 1, x^7 = -1
+
+magnitude x_0 = 1.2
+x^0.0 = 1.0, x^1.0 = -1.2, x^2.0 = 1.4, x^3.0 = -1.7, x^4.0 = 2.1, x^5.0 = -2.5, x^6.0 = 3.0, x^7.0 = -3.6
+
+magnitude x_0 = 0.8
+x^0.0 = 1.0, x^1.0 = -0.8, x^2.0 = 0.6, x^3.0 = -0.5, x^4.0 = 0.4, x^5.0 = -0.3, x^6.0 = 0.3, x^7.0 = -0.2
 </pre>
 </div>
 </div>
@@ -13247,7 +13270,7 @@ vector with magnitude: 1.414214, rotation: 0.785398 radians
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[51]:</div>
+<div class="prompt input_prompt">In&nbsp;[55]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># complex numbers </span>
@@ -13255,7 +13278,7 @@ vector with magnitude: 1.414214, rotation: 0.785398 radians
 <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">magnitude z_0 =&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">z</span><span class="p">))</span>
 <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
     <span class="n">z_n</span> <span class="o">=</span> <span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="o">**</span><span class="n">k</span>
     <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;z^</span><span class="si">%i</span><span class="s1"> = </span><span class="si">%0.2f</span><span class="s1"> </span><span class="si">%0.2f</span><span class="s1">i , &#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">z_n</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">z_n</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
@@ -13306,7 +13329,7 @@ vector with magnitude: 1.414214, rotation: 0.785398 radians
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
 magnitude z_0 = 1.0
-z^0 = 1.00 0.00i , z^1 = 0.71 0.71i , z^2 = 0.00 1.00i , z^3 = -0.71 0.71i , z^4 = -1.00 0.00i , z^5 = -0.71 -0.71i , z^6 = -0.00 -1.00i , z^7 = 0.71 -0.71i , z^8 = 1.00 -0.00i , z^9 = 0.71 0.71i 
+z^0 = 1.00 0.00i , z^1 = 0.71 0.71i , z^2 = 0.00 1.00i , z^3 = -0.71 0.71i , z^4 = -1.00 0.00i 
 
 magnitude z_0 = 0.9
 z^0 = 1.000+0.000i, z^1 = 0.636+0.636i, z^2 = 0.000+0.810i, z^3 = -0.515+0.515i, 
