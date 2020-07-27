@@ -1,6 +1,11 @@
 """
-complex plane functions and class for getting pixels in three different measuring systems
+complex plane functions and class for getting pixels in three different measuring systems:
+    pixels of the image
+    location in units of measure
+    points on the complex plane
+
 """
+from collections import OrderedDict
 import numpy as np
 
 # print_order controls display of frame in complex_frame_dict_to_string
@@ -8,9 +13,13 @@ print_order = ['upper_left', 'top_center', 'upper_right',
                'left_center', 'center_point', 'right_center',
               'bottom_left', 'bottom_center', 'bottom_right']
 
-def get_frame_from_dict(def_dict):
+ODD_FRAME = {'center_point': 0.0+0.0j, 'zoom': 1, 'theta': 0.0, 'n_rows': 11, 'n_cols': 11}
+EVN_FRAME = {'center_point': 0.0+0.0j, 'zoom': 1, 'theta': 0.0, 'n_rows': 12, 'n_cols': 12}
+
+def get_frame_from_dict(def_dict=ODD_FRAME):
     """ complex_frame, def_dict = get_frame_from_dict(def_dict)
         legacy wrapper function.
+
     Args:
         def_dict: definition dictionary with keys:
                     'center_point', 'zoom', 'theta', 'n_rows', 'n_cols'
@@ -28,8 +37,30 @@ def get_frame_from_dict(def_dict):
     return complex_frame, def_dict
 
 def get_complex_frame(CP, ZM, theta, h=1, w=1):
-    """ get the complex numbers at ends and centers of a frame  """
+    """ get the complex numbers at ends and centers of a frame defined by the input parameters
+
+    Args:
+        CP      Center Point of frame
+        ZM      ZooM factor - scaling -
+                            ZM > 1      ZooM in (frame point numbers shrink)
+                            0 > ZM < 1  Zoom out (Zero is not allowed, negatives are negated)
+        theta   radians of rotation of the whole frame
+        h       height of frame (in pixels or height aspect)
+        w       width of frame (in pixels or width aspect
+
+    Returns:
+        frame_dict:         dictionary of frame points:
+                    center_point        CP
+                    top_center          middle of top edge of frame
+                    right_center        midpoint of right edge
+
+                    bottom_center, left_center, upper_right, bottom_right, upper_left, bottom_left
+
+    """
+    # Create the frame around the origin
     frame_dict = {'center_point':CP}
+
+    # Rotate the origin by theta
     if w >= h:
         frame_dict['top_center'] = np.exp(1j*(np.pi/2 + theta))/ZM
         frame_dict['right_center'] = (w/h) * np.exp(1j * theta) / ZM
@@ -37,6 +68,7 @@ def get_complex_frame(CP, ZM, theta, h=1, w=1):
         frame_dict['top_center'] = (h/w) * np.exp(1j*(np.pi/2 + theta)) / ZM
         frame_dict['right_center'] = np.exp(1j * theta) / ZM
 
+    # Calculate the remaining points from the origin
     frame_dict['bottom_center'] = frame_dict['top_center'] * -1
     frame_dict['left_center'] = frame_dict['right_center'] * -1
     frame_dict['upper_right'] = frame_dict['right_center'] + frame_dict['top_center']
@@ -45,27 +77,38 @@ def get_complex_frame(CP, ZM, theta, h=1, w=1):
     frame_dict['upper_left'] = frame_dict['left_center'] + frame_dict['top_center']
     frame_dict['bottom_left'] = frame_dict['left_center'] + frame_dict['bottom_center']
 
+    # Shift the whole frame by the Center Point vector
     for k in frame_dict.keys():
+        # effecicency weakness allowed for possible future version inclusion of unitized pixels
         frame_dict[k] = frame_dict[k] + CP
 
     return frame_dict
 
 def complex_to_string(z, N_DEC=6):
-    """ format single complex number to string with n decimal places """
+    """ format single complex number to string with n decimal places
+    Args:
+         z      a complex number
+         N_DEC  number of decimal places
+    """
     MAX_DEC = 17
     MIN_DEC = 1
 
+    # error-guard the number of decimal places
     n = max(min(MAX_DEC, round(N_DEC)), MIN_DEC)
+    # construct the format string to the number of decimal places
     fs = '%%0.%df'%n
 
+    # separate real and imaginary as floats
     zr = np.real(z)
     zi = np.imag(z)
 
+    # balance alignment by including the plus sign before the imaginary part
     if np.sign(zi) < 0:
         s1 = ' ' + fs % zi + 'j'
     else:
         s1 = ' +' + fs % zi + 'j'
 
+    # balance the spacing of the real part by adding a space if positive (including zero)
     if np.sign(zr) < 0:
         z_str = fs % zr + s1
     else:
@@ -74,7 +117,10 @@ def complex_to_string(z, N_DEC=6):
     return z_str
 
 def get_aligned_dict_string(d, N_DEC=3):
-    """ pretty_string = z_plane.get_aligned_dict_string(d, N_DEC=3) """
+    """ print-format a dictionary of (possibly complex) numbers
+    pretty_string = z_plane.get_aligned_dict_string(d, N_DEC=3)
+
+    """
     INDENT = 16
     out_string = ''
     for k in sorted(list(d.keys())):
@@ -100,7 +146,8 @@ def get_aligned_dict_string(d, N_DEC=3):
     return out_string + '\n'
 
 def complex_frame_dict_to_string(frame_dict, N_DEC=4):
-    """ get a formatted list of strings """
+    """ get a formatted list of strings
+    """
     STR_L = 14
     frame_string = ''
     row = 0
@@ -116,7 +163,8 @@ def complex_frame_dict_to_string(frame_dict, N_DEC=4):
     return frame_string
 
 def show_complex_matrix(Z0,N_DEC=3):
-    """ display a complex matrix or array """
+    """ command line display a complex matrix or array
+    """
     SPC = ' ' * 2
     if Z0.shape[0] == Z0.size:
         row_str = ''
@@ -133,7 +181,10 @@ def show_complex_matrix(Z0,N_DEC=3):
             print(row_str)
 
 def rnd_lambda(s=1):
-    """ random parameters s.t. a*d - b*c = 1 """
+    """ random parameters s.t. a*d - b*c = 1
+    special case random parameter generator
+    
+    """
     b = np.random.random()
     c = np.random.random()
     ad = b*c + 1
