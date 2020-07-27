@@ -183,7 +183,7 @@ def show_complex_matrix(Z0,N_DEC=3):
 def rnd_lambda(s=1):
     """ random parameters s.t. a*d - b*c = 1
     special case random parameter generator
-    
+
     """
     b = np.random.random()
     c = np.random.random()
